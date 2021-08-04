@@ -1,0 +1,359 @@
+items: 
+  id: 0
+  name: "Root"
+  plugin: Base
+  class: RootItem
+  children: 
+    - 
+      id: 1
+      name: "World"
+      plugin: Body
+      class: WorldItem
+      data: 
+        collisionDetection: false
+        collisionDetector: AISTCollisionDetector
+        materialTableFile: "${SHARE}/default/materials.yaml"
+      children: 
+        - 
+          id: 2
+          name: "Tank"
+          plugin: Body
+          class: BodyItem
+          data: 
+            modelFile: "${SHARE}/model/Tank/Tank.body"
+            currentBaseLink: ""
+            rootPosition: [ -2, -0.5, 0.1 ]
+            rootAttitude: [ 
+              1, 0, 0, 
+              0, 1, 0, 
+              0, 0, 1 ]
+            jointPositions: [  0.000000,  0.000000 ]
+            initialRootPosition: [ -2, -0.5, 0.1 ]
+            initialRootAttitude: [ 
+              1, 0, 0, 
+              0, 1, 0, 
+              0, 0, 1 ]
+            initialJointPositions: [  0.000000,  0.000000 ]
+            zmp: [ 0, 0, 0 ]
+            collisionDetection: true
+            selfCollisionDetection: false
+            isEditable: true
+          children: 
+            - 
+              id: 3
+              name: "JoystickController"
+              plugin: Body
+              class: SimpleControllerItem
+              data: 
+                isNoDelayMode: false
+                controllerOptions: ""
+                controller: "TankJoystickController"
+                baseDirectory: "Controller directory"
+                reloading: true
+            - 
+              id: 4
+              name: "SensorVisualizer"
+              plugin: Body
+              class: SensorVisualizer
+              data: 
+                subItems: 
+                  - 
+                    class: PointCloudVisualizer
+                    name: Kinect
+                    renderingMode: Point
+                    pointSize: 0
+                    voxelSize: 0.01
+                    isEditable: false
+                  - 
+                    class: RangeSensorVisualizer
+                    name: VLP-16
+                    renderingMode: Point
+                    pointSize: 0
+                    voxelSize: 0.01
+                    isEditable: false
+                  - 
+                    class: CameraImageVisualizer
+                    name: Kinect Camera
+                  - 
+                    class: CameraImageVisualizer
+                    name: Theta
+        - 
+          id: 5
+          name: "Labo1"
+          plugin: Body
+          class: BodyItem
+          data: 
+            modelFile: "${SHARE}/model/Labo1/Labo1.body"
+            currentBaseLink: ""
+            rootPosition: [ 0, 0, 0 ]
+            rootAttitude: [ 
+              1, 0, 0, 
+              0, 1, 0, 
+              0, 0, 1 ]
+            initialRootPosition: [ 0, 0, 0 ]
+            initialRootAttitude: [ 
+              1, 0, 0, 
+              0, 1, 0, 
+              0, 0, 1 ]
+            zmp: [ 0, 0, 0 ]
+            collisionDetection: true
+            selfCollisionDetection: false
+            isEditable: false
+        - 
+          id: 6
+          name: "AISTSimulator"
+          plugin: Body
+          class: AISTSimulatorItem
+          data: 
+            timeStep: 0.001
+            realtimeSync: true
+            recording: "tail"
+            timeRangeMode: "Active control period"
+            timeLength: 60
+            allLinkPositionOutputMode: false
+            deviceStateOutput: true
+            controllerThreads: true
+            recordCollisionData: false
+            controllerOptions: ""
+            dynamicsMode: "Forward dynamics"
+            integrationMode: "Runge Kutta"
+            gravity: [ 0, 0, -9.80665 ]
+            staticFriction: 0.5
+            dynamicFriction: 0.5
+            cullingThresh: 0.01
+            contactCullingDepth: 0.05
+            errorCriterion: 0.001
+            maxNumIterations: 1000
+            contactCorrectionDepth: 0.0001
+            contactCorrectionVelocityRatio: 30
+            kinematicWalking: false
+            2Dmode: false
+            oldAccelSensorMode: false
+          children: 
+            - 
+              id: 7
+              name: "GLVisionSimulator"
+              plugin: Body
+              class: GLVisionSimulatorItem
+              data: 
+                enabled: true
+                maxFrameRate: 1000
+                maxLatency: 1
+                recordVisionData: true
+                threadMode: Sensor
+                bestEffort: true
+                allSceneObjects: false
+                rangeSensorPrecisionRatio: 2
+                depthError: 0
+                enableHeadLight: true
+                enableAdditionalLights: true
+views: 
+  - 
+    id: 0
+    name: "Kinect Image"
+    plugin: Base
+    class: ImageView
+    mounted: true
+    state: 
+      ImageProviderItem: [ 4, "Kinect Camera" ]
+  - 
+    id: 1
+    name: "Theta Image"
+    plugin: Base
+    class: ImageView
+    mounted: true
+    state: 
+      ImageProviderItem: [ 4, "Theta" ]
+  - 
+    id: 2
+    plugin: Base
+    class: ItemPropertyView
+    mounted: true
+  - 
+    id: 3
+    plugin: Base
+    class: ItemTreeView
+    mounted: true
+    state: 
+      selected: [ 6 ]
+      checked: [ 1, 2, [ 4, "Kinect" ], [ 4, "VLP-16" ], [ 4, "Kinect Camera" ], [ 4, "Theta" ] ]
+      expanded: [ 1, 2, 3, 4, 5, 6 ]
+  - 
+    id: 4
+    plugin: Base
+    class: MessageView
+    mounted: true
+  - 
+    id: 5
+    plugin: Base
+    class: SceneView
+    mounted: true
+    state: 
+      editMode: false
+      viewpointControlMode: thirdPerson
+      collisionLines: false
+      polygonMode: fill
+      defaultHeadLight: true
+      defaultHeadLightIntensity: 0.75
+      headLightLightingFromBack: false
+      worldLight: true
+      worldLightIntensity: 0.1
+      worldLightAmbient: 0
+      additionalLights: true
+      fog: true
+      floorGrid: false
+      floorGridSpan: 10
+      floorGridInterval: 0.5
+      xzGridSpan: 10
+      xzGridInterval: 0.5
+      xzGrid: false
+      yzGridSpan: 10
+      yzGridInterval: 0.5
+      texture: true
+      lineWidth: 1
+      pointSize: 2
+      normalVisualization: false
+      normalLength: 0.01
+      coordinateAxes: true
+      fpsTestIteration: 1
+      showFPS: true
+      enableNewDisplayListDoubleRendering: false
+      useBufferForPicking: true
+      upsideDown: false
+      cameras: 
+        - 
+          camera: [ System, Perspective ]
+          isCurrent: true
+          fieldOfView: 0.6978
+          near: 0.01
+          far: 10000
+          eye: [ -7.55000311, -3.78400786, 3.39380608 ]
+          direction: [ 0.844599733, 0.410130528, -0.344157291 ]
+          up: [ 0.309587218, 0.15033295, 0.938912008 ]
+        - 
+          camera: [ System, Orthographic ]
+          orthoHeight: 20
+          near: 0.01
+          far: 10000
+      backgroundColor: [ 0, 0, 0 ]
+      gridColor: [ 0.899999976, 0.899999976, 0.899999976, 1 ]
+      xzgridColor: [ 0.899999976, 0.899999976, 0.899999976, 1 ]
+      yzgridColor: [ 0.899999976, 0.899999976, 0.899999976, 1 ]
+      dedicatedItemTreeViewChecks: false
+  - 
+    id: 6
+    name: "Joystick"
+    plugin: Base
+    class: VirtualJoystickView
+    mounted: true
+  - 
+    id: 7
+    plugin: Body
+    class: BodyLinkView
+    mounted: true
+    state: 
+      showRotationMatrix: false
+  - 
+    id: 8
+    plugin: Body
+    class: JointSliderView
+    mounted: true
+    state: 
+      showAllJoints: true
+      jointId: true
+      name: true
+      numColumns: 1
+      spinBox: true
+      slider: true
+      labelOnLeft: true
+      currentBodyItem: 2
+  - 
+    id: 9
+    plugin: Body
+    class: LinkSelectionView
+    mounted: true
+    state: 
+      listingMode: "Link List"
+      currentBodyItem: 2
+      bodyItems: 
+        - 
+          id: 2
+          selectedLinks: [ 0 ]
+  - 
+    id: 10
+    plugin: Python
+    class: PythonConsoleView
+    mounted: true
+
+viewAreas: 
+  - 
+    type: embedded
+    tabs: true
+    contents: 
+      type: splitter
+      orientation: horizontal
+      sizes: [ 363, 1551 ]
+      children: 
+        - 
+          type: splitter
+          orientation: vertical
+          sizes: [ 530, 530 ]
+          children: 
+            - 
+              type: pane
+              views: [ 3 ]
+              current: 3
+            - 
+              type: pane
+              views: [ 2, 9 ]
+              current: 2
+        - 
+          type: splitter
+          orientation: vertical
+          sizes: [ 822, 238 ]
+          children: 
+            - 
+              type: splitter
+              orientation: horizontal
+              sizes: [ 724, 821 ]
+              children: 
+                - 
+                  type: splitter
+                  orientation: vertical
+                  sizes: [ 408, 408 ]
+                  children: 
+                    - 
+                      type: pane
+                      views: [ 7, 8, 0 ]
+                      current: 0
+                    - 
+                      type: pane
+                      views: [ 1 ]
+                      current: 1
+                - 
+                  type: pane
+                  views: [ 5 ]
+                  current: 5
+            - 
+              type: splitter
+              orientation: horizontal
+              sizes: [ 890, 655 ]
+              children: 
+                - 
+                  type: pane
+                  views: [ 4, 10 ]
+                  current: 4
+                - 
+                  type: pane
+                  views: [ 6 ]
+                  current: 6
+layoutOfToolBars: 
+  rows: 
+    - 
+      - { name: "FileBar", x: 0, priority: 0 }
+      - { name: "SimulationBar", x: 47, priority: 1 }
+      - { name: "ScriptBar", x: 47, priority: 0 }
+      - { name: "TimeBar", x: 94, priority: 0 }
+      - { name: "SceneBar", x: 1175, priority: 2 }
+      - { name: "KinematicsBar", x: 1540, priority: 3 }
+      - { name: "ImageViewBar", x: 1774, priority: 4 }

@@ -1,0 +1,11 @@
+
+
+
+if(BUILD_MYPLUGIN_HUBOPLUGIN)
+  set(target ColRobotController)
+	add_cnoid_simple_controller(${target} SHARED ColRobotPlugin.cpp)
+endif()
+
+
+
+
