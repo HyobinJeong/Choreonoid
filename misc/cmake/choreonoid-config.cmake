@@ -18,7 +18,7 @@ set(CHOREONOID_VERSION_MINOR "7")
 set(CHOREONOID_VERSION_PATCH "0")
 
 set(CHOREONOID_DEFINITIONS -DEIGEN_NO_DEBUG;-DQT_NO_DEBUG;-DQT_NO_KEYWORDS;-DQT_NO_OPENGL_ES_2)
-set(CHOREONOID_INCLUDE_DIRS /usr/local/include/choreonoid-1.7;/usr/local/include/eigen3;/usr/include;/usr/include/x86_64-linux-gnu/qt5/;/usr/include/x86_64-linux-gnu/qt5/QtCore;/usr/lib/x86_64-linux-gnu/qt5//mkspecs/linux-g++-64;/usr/include/x86_64-linux-gnu/qt5/QtGui;/usr/include/x86_64-linux-gnu/qt5/QtWidgets;/usr/include/x86_64-linux-gnu/qt5/QtOpenGL;/usr/include/x86_64-linux-gnu/qt5/QtNetwork;/include;/usr/include/python3.5m)
+set(CHOREONOID_INCLUDE_DIRS /usr/local/include/choreonoid-1.7;/usr/include/eigen3;/usr/include;/usr/include/x86_64-linux-gnu/qt5/;/usr/include/x86_64-linux-gnu/qt5/QtCore;/usr/lib/x86_64-linux-gnu/qt5//mkspecs/linux-g++;/usr/include/x86_64-linux-gnu/qt5/QtGui;/usr/include/x86_64-linux-gnu/qt5/QtWidgets;/usr/include/x86_64-linux-gnu/qt5/QtOpenGL;/usr/include/x86_64-linux-gnu/qt5/QtNetwork;/include;/usr/include/python3.8)
 set(CHOREONOID_LIBRARY_DIRS /usr/local/lib;/usr/local/lib/choreonoid-1.7)
 set(CHOREONOID_UTIL_LIBRARIES CnoidUtil)
 set(CHOREONOID_BASE_LIBRARIES ${CHOREONOID_UTIL_LIBRARIES} CnoidBase)

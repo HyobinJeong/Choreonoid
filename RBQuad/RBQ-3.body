@@ -39,7 +39,7 @@ links:
     rotorInertia: 0.000072
     gearRatio: 11
     jointRange: [ -180, 180 ]
-    translation: [ -0.234, -0.07946, 0 ]
+    translation: [ -0.244, -0.077, 0 ]
     centerOfMass: [ -0.0045,0.017,0.0004 ]
     mass: 1.6
     inertia: [
@@ -73,7 +73,7 @@ links:
     rotorInertia: 0.000072
     gearRatio: 11
     jointRange: [ -360, 360 ]
-    translation: [ 0, -0.06995, 0 ]
+    translation: [ 0, -0.068, 0 ]
     centerOfMass: [ -0.00026,0.007,-0.04112 ]
     mass: 1.8
     inertia: [
@@ -139,7 +139,6 @@ links:
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
-    material: Sole
     inertia: [
       0.001, 0, 0,
       0, 0.001, 0,
@@ -150,7 +149,7 @@ links:
         translation: [ 0, 0, 0 ]
         elements:
           Shape:
-            geometry: { type: Sphere, radius: 0.02  }
+            geometry: { type: Sphere, radius: 0.025  }
             appearance:
               material: 
                 diffuseColor: [ 0.6, 0.6, 0.6 ]
@@ -170,7 +169,7 @@ links:
     rotorInertia: 0.000072
     gearRatio: 11
     jointRange: [ -180, 180 ]
-    translation: [ -0.234, 0.07946, 0 ]
+    translation: [ -0.244, 0.077, 0 ]
     centerOfMass: [ -0.0045,-0.017,0.0004 ]
     mass: 1.6
     inertia: [
@@ -202,7 +201,7 @@ links:
     rotorInertia: 0.000072
     gearRatio: 11
     jointRange: [ -360, 360 ]
-    translation: [ 0, +0.06995, 0 ]
+    translation: [ 0, +0.068, 0 ]
     centerOfMass: [ -0.00026,-0.007,-0.04112 ]
     mass: 1.8
     inertia: [
@@ -234,7 +233,6 @@ links:
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
-    material: Sole
     inertia: [
       0.001, 0, 0,
       0, 0.001, 0,
@@ -245,7 +243,7 @@ links:
         translation: [ 0, 0, 0 ]
         elements:
           Shape:
-            geometry: { type: Sphere, radius: 0.02  }
+            geometry: { type: Sphere, radius: 0.025  }
             appearance:
               material: 
                 diffuseColor: [ 0.6, 0.6, 0.6 ]
@@ -263,7 +261,7 @@ links:
     rotorInertia: 0.000072
     gearRatio: 11
     jointRange: [ -180, 180 ]
-    translation: [ 0.234, -0.07946, 0 ]
+    translation: [ 0.244, -0.077, 0 ]
     centerOfMass: [ -0.0045,0.017,0.0004 ]
     mass: 1.6
     inertia: [
@@ -295,7 +293,7 @@ links:
     rotorInertia: 0.000072
     gearRatio: 11
     jointRange: [ -360, 360 ]
-    translation: [ 0, -0.06995, 0 ]
+    translation: [ 0, -0.068, 0 ]
     centerOfMass: [ -0.00026,0.007,-0.04112 ]
     mass: 1.8
     inertia: [
@@ -327,7 +325,6 @@ links:
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
-    material: TankTracks
     inertia: [
       0.001, 0, 0,
       0, 0.001, 0,
@@ -338,7 +335,7 @@ links:
         translation: [ 0, 0, 0 ]
         elements:
           Shape:
-            geometry: { type: Sphere, radius: 0.02  }
+            geometry: { type: Sphere, radius: 0.025  }
             appearance:
               material: 
                 diffuseColor: [ 0.6, 0.6, 0.6 ]
@@ -357,7 +354,7 @@ links:
     rotorInertia: 0.000072
     gearRatio: 11
     jointRange: [ -180, 180 ]
-    translation: [ 0.234, 0.07946, 0 ]
+    translation: [ 0.244, 0.077, 0 ]
     centerOfMass: [ -0.0045,-0.017,0.0004 ]
     mass: 1.6
     inertia: [
@@ -389,7 +386,7 @@ links:
     rotorInertia: 0.000072
     gearRatio: 11
     jointRange: [ -360, 360 ]
-    translation: [ 0, 0.06995, 0 ]
+    translation: [ 0, 0.068, 0 ]
     centerOfMass: [ -0.00026,-0.007,-0.04112 ]
     mass: 1.8
     inertia: [
@@ -421,7 +418,6 @@ links:
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
-    material: Sole
     inertia: [
       0.001, 0, 0,
       0, 0.001, 0,
@@ -432,7 +428,7 @@ links:
         translation: [ 0, 0, 0 ]
         elements:
           Shape:
-            geometry: { type: Sphere, radius: 0.02  }
+            geometry: { type: Sphere, radius: 0.025  }
             appearance:
               material: 
                 diffuseColor: [ 0.6, 0.6, 0.6 ]
@@ -478,7 +474,7 @@ defaultIKsetup:
   FRONT_R_KNEE: [ WAIST ]
   FRONT_L_KNEE: [ WAIST ]
 
-possileSupportLinks: [ HIND_R_FT, HIND_L_FT, FRONT_R_FT, FRONT_L_FT ]
+possileSupportLinks: [ HIND_R_KNEE, HIND_L_KNEE, FRONT_R_KNEE, FRONT_L_KNEE ]
 
 collisionDetection:
   excludeTreeDepth: 3

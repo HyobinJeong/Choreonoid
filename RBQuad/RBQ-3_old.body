@@ -10,12 +10,12 @@ links:
     name: WAIST
     jointType: free
     translation: [ 0, 0, 0.3135 ]
-    centerOfMass: [ -0.00, 0, 0.0 ]
+    centerOfMass: [ 0, 0, 0.0 ]
     mass: 11.5765
     inertia: [
-      0.070908096, 0.001976068, 0.009267259,
-      0.001976068, 0.476924345, -0.000149917,
-      0.009267259, -0.000149917, 0.485757972 ]
+      1, 0, 0,
+      0, 1, 0,
+      0, 0, 1 ]
     elements:
       -
         type: Shape
@@ -37,15 +37,15 @@ links:
     jointAxis: [ 1, 0, 0 ]
     jointId: 0
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -180, 180 ]
-    translation: [ -0.234, -0.07946, 0 ]
+    translation: [ -0.244, -0.077, 0 ]
     centerOfMass: [ -0.0045,0.017,0.0004 ]
-    mass: 1.6
+    mass: 2.38674
     inertia: [
-      0.001541447, -0.000013604, 0.000006180,
-      -0.000013604, 0.001976742, -0.000083792,
-      0.000006180, -0.000083792, 0.001469855 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: &Hind_Right_RollShape
       -
         type: Transform
@@ -71,15 +71,15 @@ links:
     jointAxis: [ 0, 1, 0 ]
     jointId: 1
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -360, 360 ]
-    translation: [ 0, -0.06995, 0 ]
+    translation: [ 0, -0.068, 0 ]
     centerOfMass: [ -0.00026,0.007,-0.04112 ]
-    mass: 1.8
+    mass: 0.67231
     inertia: [
-      0.011590515, 0.000021740, 0.000496432,
-      0.000021740, 0.011996886, 0.001678318,
-      0.000496432, 0.001678318, 0.002999047 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: &PitchShape
       - 
         type: Transform
@@ -106,15 +106,15 @@ links:
     jointAxis: [ 0, 1, 0 ]
     jointId: 2
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -150, 0 ]
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0075,0.00035,-0.08803 ]
-    mass: 0.2
+    mass: 0.173
     inertia: [
-      0.000586375, -0.000000042, 0.000010702,
-      -0.000000042, 0.011996886, 0.000,
-      0.000010702, 0.000, 0.000015962 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: &KneeShape
       - 
         type: Transform
@@ -139,18 +139,17 @@ links:
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
-    material: Sole
     inertia: [
-      0.001, 0, 0,
-      0, 0.001, 0,
-      0, 0, 0.001 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements:
       - 
         type: Transform
         translation: [ 0, 0, 0 ]
         elements:
           Shape:
-            geometry: { type: Sphere, radius: 0.02  }
+            geometry: { type: Sphere, radius: 0.025  }
             appearance:
               material: 
                 diffuseColor: [ 0.6, 0.6, 0.6 ]
@@ -168,15 +167,15 @@ links:
     jointAxis: [ 1, 0, 0 ]
     jointId: 3
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -180, 180 ]
-    translation: [ -0.234, 0.07946, 0 ]
+    translation: [ -0.244, 0.077, 0 ]
     centerOfMass: [ -0.0045,-0.017,0.0004 ]
-    mass: 1.6
+    mass: 2.38674
     inertia: [
-      0.001541447, -0.000013604, 0.000006180,
-      -0.000013604, 0.001976742, -0.000083792,
-      0.000006180, -0.000083792, 0.001469855  ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: &Hind_Left_RollShape
       -
         type: Transform
@@ -200,15 +199,15 @@ links:
     jointAxis: [ 0, 1, 0 ]
     jointId: 4
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -360, 360 ]
-    translation: [ 0, +0.06995, 0 ]
+    translation: [ 0, +0.068, 0 ]
     centerOfMass: [ -0.00026,-0.007,-0.04112 ]
-    mass: 1.8
+    mass: 0.67231
     inertia: [
-      0.011590515, 0.000021740, 0.000496432,
-      0.000021740, 0.011996886, 0.001678318,
-      0.000496432, 0.001678318, 0.002999047 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: *PitchShape
   -
     name: HIND_L_KNEE
@@ -217,15 +216,15 @@ links:
     jointAxis: [ 0, 1, 0 ]
     jointId: 5
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -150, 0 ]
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0075,-0.00035,-0.08803 ]
-    mass: 0.2
+    mass: 0.173
     inertia: [
-      0.000586375, -0.000000042, 0.000010702,
-      -0.000000042, 0.011996886, 0.000,
-      0.000010702, 0.000, 0.000015962 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: *KneeShape
   -
     name: HIND_L_FT
@@ -234,18 +233,17 @@ links:
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
-    material: Sole
     inertia: [
-      0.001, 0, 0,
-      0, 0.001, 0,
-      0, 0, 0.001 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements:
       - 
         type: Transform
         translation: [ 0, 0, 0 ]
         elements:
           Shape:
-            geometry: { type: Sphere, radius: 0.02  }
+            geometry: { type: Sphere, radius: 0.025  }
             appearance:
               material: 
                 diffuseColor: [ 0.6, 0.6, 0.6 ]
@@ -261,15 +259,15 @@ links:
     jointAxis: [ 1, 0, 0 ]
     jointId: 6
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -180, 180 ]
-    translation: [ 0.234, -0.07946, 0 ]
+    translation: [ 0.244, -0.077, 0 ]
     centerOfMass: [ -0.0045,0.017,0.0004 ]
-    mass: 1.6
+    mass: 2.38674
     inertia: [
-      0.001541447, -0.000013604, 0.000006180,
-      -0.000013604, 0.001976742, -0.000083792,
-      0.000006180, -0.000083792, 0.001469855 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: &FRONT_RIGHT_RollShape
       -
         type: Transform
@@ -293,15 +291,15 @@ links:
     jointAxis: [ 0, 1, 0 ]
     jointId: 7
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -360, 360 ]
-    translation: [ 0, -0.06995, 0 ]
+    translation: [ 0, -0.068, 0 ]
     centerOfMass: [ -0.00026,0.007,-0.04112 ]
-    mass: 1.8
+    mass: 0.67231
     inertia: [
-      0.011590515, 0.000021740, 0.000496432,
-      0.000021740, 0.011996886, 0.001678318,
-      0.000496432, 0.001678318, 0.002999047 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: *PitchShape
   -
     name: FRONT_R_KNEE
@@ -310,15 +308,15 @@ links:
     jointAxis: [ 0, 1, 0 ]
     jointId: 8
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -150, 0 ]
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0075,0.00035,-0.08803 ]
-    mass: 0.2
+    mass: 0.173
     inertia: [
-      0.000586375, -0.000000042, 0.000010702,
-      -0.000000042, 0.011996886, 0.000,
-      0.000010702, 0.000, 0.000015962 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: *KneeShape
   -
     name: FRONT_R_FT
@@ -327,18 +325,17 @@ links:
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
-    material: TankTracks
     inertia: [
-      0.001, 0, 0,
-      0, 0.001, 0,
-      0, 0, 0.001 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements:
       - 
         type: Transform
         translation: [ 0, 0, 0 ]
         elements:
           Shape:
-            geometry: { type: Sphere, radius: 0.02  }
+            geometry: { type: Sphere, radius: 0.025  }
             appearance:
               material: 
                 diffuseColor: [ 0.6, 0.6, 0.6 ]
@@ -355,15 +352,15 @@ links:
     jointAxis: [ 1, 0, 0 ]
     jointId: 9
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -180, 180 ]
-    translation: [ 0.234, 0.07946, 0 ]
+    translation: [ 0.244, 0.077, 0 ]
     centerOfMass: [ -0.0045,-0.017,0.0004 ]
-    mass: 1.6
+    mass: 2.38674
     inertia: [
-      0.001541447, -0.000013604, 0.000006180,
-      -0.000013604, 0.001976742, -0.000083792,
-      0.000006180, -0.000083792, 0.001469855 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: &FRONT_LEFT_RollShape
       -
         type: Transform
@@ -387,15 +384,15 @@ links:
     jointAxis: [ 0, 1, 0 ]
     jointId: 10
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -360, 360 ]
-    translation: [ 0, 0.06995, 0 ]
+    translation: [ 0, 0.068, 0 ]
     centerOfMass: [ -0.00026,-0.007,-0.04112 ]
-    mass: 1.8
+    mass: 0.6723
     inertia: [
-      0.011590515, 0.000021740, 0.000496432,
-      0.000021740, 0.011996886, 0.001678318,
-      0.000496432, 0.001678318, 0.002999047 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: *PitchShape
   -
     name: FRONT_L_KNEE
@@ -404,15 +401,15 @@ links:
     jointAxis: [ 0, 1, 0 ]
     jointId: 11
     rotorInertia: 0.000072
-    gearRatio: 11
+    gearRatio: 1
     jointRange: [ -150, 0 ]
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0075,-0.00035,-0.08803 ]
-    mass: 0.2
+    mass: 0.173
     inertia: [
-       0.000586375, -0.000000042, 0.000010702,
-      -0.000000042, 0.011996886, 0.000,
-      0.000010702, 0.000, 0.000015962 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements: *KneeShape
   -
     name: FRONT_L_FT
@@ -421,18 +418,17 @@ links:
     translation: [ 0, 0, -0.225 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
-    material: Sole
     inertia: [
-      0.001, 0, 0,
-      0, 0.001, 0,
-      0, 0, 0.001 ]
+      0.1, 0, 0,
+      0, 0.1, 0,
+      0, 0, 0.1 ]
     elements:
       - 
         type: Transform
         translation: [ 0, 0, 0 ]
         elements:
           Shape:
-            geometry: { type: Sphere, radius: 0.02  }
+            geometry: { type: Sphere, radius: 0.025  }
             appearance:
               material: 
                 diffuseColor: [ 0.6, 0.6, 0.6 ]
@@ -478,7 +474,7 @@ defaultIKsetup:
   FRONT_R_KNEE: [ WAIST ]
   FRONT_L_KNEE: [ WAIST ]
 
-possileSupportLinks: [ HIND_R_FT, HIND_L_FT, FRONT_R_FT, FRONT_L_FT ]
+possileSupportLinks: [ HIND_R_KNEE, HIND_L_KNEE, FRONT_R_KNEE, FRONT_L_KNEE ]
 
 collisionDetection:
   excludeTreeDepth: 3

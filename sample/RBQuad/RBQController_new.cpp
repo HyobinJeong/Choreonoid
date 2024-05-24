@@ -12,7 +12,10 @@
  */
 
 
-// #include "/home/rainbow/Desktop/RBQuad_Controller/utils/SimVariable.h"
+//#include "/home/rainbow/Desktop/RB1_Controller/utils/SimVariable.h"
+//#include "/home/rainbow/RBMani_Projects/RBQuad_Controller/utils/SimVariable.h"
+//#include "/home/rainbow/Desktop/RBInte_Controller_before/RBInte_Controller-31f28fecec78bdfc86abe644aad438aab1c21269/utils/SimVariable.h"
+
 #include "/home/rainbow/Desktop/RBQuad_PODO/share/Headers/SimVariable.h"
 
 
@@ -31,18 +34,12 @@
 #include <cnoid/Device>
 #include <cnoid/ForceSensor>
 
-//for marker
-#include <cnoid/Plugin>
-#include <cnoid/SceneDrawables>
-#include <cnoid/SceneView>
-#include <cnoid/RootItem>
-#include <cnoid/EigenUtil> // Eigen 변환 관련 함수들
-#include <cnoid/MeshGenerator> // 메쉬 생성기
-
 pSIM_VARIABLE simData;
+//pRBCORE_SHM_SENSOR        sharedSEN;
+//pRBCORE_SHM_REFERENCE    sharedREF;
 
-const static double D2R = 1.0/180.0*3.1415926535897;
-const static double R2D = 1.0/D2R;
+//const static double D2R = 1.0/180.0*3.1415926535897;
+//const static double R2D = 1.0/D2R;
 
 
 using namespace std;
@@ -70,28 +67,6 @@ static double initPos[] = {
    0.0, 30.0, -60.0,
    0.0, 30.0, -60.0,
 };
-
-static double lowerJLim[] = {
-   -42.0, -360.0, -162.0,
-   -31.0, -360.0, -162.0,
-   -42.0, -360.0, -162.0,
-   -31.0, -360.0, -162.0,
-};
-
-static double upperJLim[] = {
-   31.0, 360.0, -24.0,
-   42.0, 360.0, -24.0,
-   31.0, 360.0, -24.0,
-   42.0, 360.0, -24.0,
-};
-
-static double TauLim[] = {
-   60.0, 60.0, 80.0,
-   60.0, 60.0, 80.0,
-   60.0, 60.0, 80.0,
-   60.0, 60.0, 80.0,
-};
-
 
 enum JointSequentialNumberBYNAME
 {
@@ -124,8 +99,6 @@ class RBQController : public cnoid::SimpleController
 
     SimpleControllerIO* pio;
 
-    bool shm_opened;
-
     int currentFrame;
     double dt;
     int initcnt;
@@ -141,18 +114,16 @@ class RBQController : public cnoid::SimpleController
 
     double Quat_IMU[4];
 
-//    SgPointSetPtr marker; // 마커 추가
-    SgPosTransformPtr zmpRef, comRef; //sphereTransform;
-    SgPosTransformPtr pfoot_final[4];
 
 public:
     const static int NUM_INIT_STEP = 1000;
     virtual bool initialize(SimpleControllerIO* io) {
 
+        pio = io;
+
         // Core Shared Memory Creation [SharedData]===================================
-        shm_opened = false;
         int shmFD;
-        shmFD = shm_open(SIM_DATA, O_RDWR, 0666);
+        shmFD = shm_open(SIM_DATA, O_CREAT|O_RDWR, 0666);
         if(shmFD == -1){
             io->os() << "Fail to open core shared memory [simData]";
         }else{
@@ -165,11 +136,10 @@ public:
                 }
             }
         }
-        io->os() << "Core shared memory creation = OK [simData]";
+        //io->os() << "Core shared memory creation = OK [simData]";
         // =========================================================================
 
 
-        pio = io;
         io->os() << "init start" << endl;
         dt = io->timeStep();
         io->os() << "time step: " <<dt<<endl;
@@ -233,134 +203,7 @@ public:
         cnt = 0;
 
         initcnt = NUM_INIT_STEP;
-
-        // 마커 초기화
-//        initializeMarker(io);
-        initializeSphereMarker(io);
-
-
         return true;
-    }
-
-//    void initializeMarker(SimpleControllerIO* io) {
-//            // 표시할 점의 초기 좌표
-//            Vector3f position(0.5, 0.5, 0.5);
-
-//            // 점의 색상 (R, G, B)
-//            SgColorArrayPtr colors = new SgColorArray;
-//            colors->resize(1);
-//            (*colors)[0] = Vector3f(1.0f, 0.0f, 0.0f); // 빨간색
-
-
-//            // 점의 크기
-//            float size = 15.0f;
-
-//            // 마커 생성
-//            marker = new SgPointSet;
-//            marker->setColors(colors);
-//            marker->setPointSize(size);
-//            marker->getOrCreateVertices()->push_back(position);
-
-//            // 뷰어에 SceneGraph 추가
-//            SceneView::instance()->scene()->addChild(marker);
-
-//            io->os() << "Marker initialized at position: " << position.transpose() << endl;
-//        }
-
-//    void updateMarkerPosition(const Vector3f& position) {
-//        marker->vertices()->at(0) = position;
-//        marker->notifyUpdate();
-//    }
-
-    void initializeSphereMarker(SimpleControllerIO* io) {
-        // 구의 반지름
-        float radius = 0.03f;
-
-        // 구의 색상 (R, G, B)
-        Vector3f color_zmpRef(1.0f, 0.0f, 0.0f); // red
-        Vector3f color_comRef(0.0f, 1.0f, 0.0f); // green
-        Vector3f color_pfoot_final(0.0f, 0.0f, 1.0f); // blue
-
-        // 구 메쉬 생성
-        MeshGenerator meshGenerator;
-        SgShapePtr sphere_zmpRef = new SgShape;
-        sphere_zmpRef->setMesh(meshGenerator.generateSphere(radius));
-        SgShapePtr sphere_comRef = new SgShape;
-        sphere_comRef->setMesh(meshGenerator.generateSphere(0.08));
-
-        SgShapePtr sphere_pfoot_final[4];
-        for(int i=0; i<4; i++){
-            sphere_pfoot_final[i] = new SgShape;
-            sphere_pfoot_final[i]->setMesh(meshGenerator.generateSphere(radius));
-        }
-
-
-        // 구 재질 설정
-        SgMaterialPtr material_zmpRef = new SgMaterial;
-        material_zmpRef->setDiffuseColor(color_zmpRef);
-        sphere_zmpRef->setMaterial(material_zmpRef);
-
-        SgMaterialPtr material_comRef = new SgMaterial;
-        material_comRef->setDiffuseColor(color_comRef);
-        sphere_comRef->setMaterial(material_comRef);
-
-        SgMaterialPtr material_pfoot_final = new SgMaterial;
-        material_pfoot_final->setDiffuseColor(color_pfoot_final);
-        for(int i=0; i<4; i++){
-            sphere_pfoot_final[i]->setMaterial(material_pfoot_final);
-        }
-
-
-        // 변환 노드에 추가
-        zmpRef = new SgPosTransform;
-        zmpRef->addChild(sphere_zmpRef);
-        comRef = new SgPosTransform;
-        comRef->addChild(sphere_comRef);
-
-        for(int i=0; i<4; i++){
-            pfoot_final[i] = new SgPosTransform;
-            pfoot_final[i]->addChild(sphere_pfoot_final[i]);
-        }
-
-        // 뷰어에 SceneGraph 추가
-        SceneView::instance()->scene()->addChild(zmpRef);
-        SceneView::instance()->scene()->addChild(comRef);
-        for(int i=0; i<4; i++){
-            SceneView::instance()->scene()->addChild(pfoot_final[i]);
-        }
-
-
-        io->os() << "Sphere marker initialized with radius: " << radius << endl;
-    }
-    void updatezmpRefPosition(const Vector3& position) {
-        // 변환 행렬을 설정하여 위치 업데이트
-        zmpRef->setTranslation(position);
-        zmpRef->notifyUpdate();
-    }
-    void updatecomRefPosition(const Vector3& position) {
-        // 변환 행렬을 설정하여 위치 업데이트
-        comRef->setTranslation(position);
-        comRef->notifyUpdate();
-    }
-    void updatefootPosition0(const Vector3& position) {
-        // 변환 행렬을 설정하여 위치 업데이트
-        pfoot_final[0]->setTranslation(position);
-        pfoot_final[0]->notifyUpdate();
-    }
-    void updatefootPosition1(const Vector3& position) {
-        // 변환 행렬을 설정하여 위치 업데이트
-        pfoot_final[1]->setTranslation(position);
-        pfoot_final[1]->notifyUpdate();
-    }
-    void updatefootPosition2(const Vector3& position) {
-        // 변환 행렬을 설정하여 위치 업데이트
-        pfoot_final[2]->setTranslation(position);
-        pfoot_final[2]->notifyUpdate();
-    }
-    void updatefootPosition3(const Vector3& position) {
-        // 변환 행렬을 설정하여 위치 업데이트
-        pfoot_final[3]->setTranslation(position);
-        pfoot_final[3]->notifyUpdate();
     }
 
     double LimitFunction(double _input, double _upperlim, double _lowerlim){
@@ -421,8 +264,6 @@ public:
         Matrix3 R = T.rotation();
         Quaterniond Qt(R);
 
-        Eigen::Matrix3d rotationMatrix = R;
-        Eigen::Vector3d euler = rotationMatrix.eulerAngles(2, 1, 0);
 
 //        io->os() << P << endl;
         //pio->os() << Qt.w() <<" "<<Qt.x() <<" "<<Qt.y() <<" "<<Qt.z() <<" "<<endl;
@@ -437,21 +278,44 @@ public:
         //setExternalForce(body,WLptr,Vector3(0,0,0),Vector3(200,0,0),0.1);
         //how to apply????
 
+//        sharedSEN->IMUData.acc(0) = Acc[0];
+//        sharedSEN->IMUData.acc(1) = Acc[1];
+//        sharedSEN->IMUData.acc(2) = Acc[2];
+
+//        sharedSEN->IMUData.gyro(0) = Gyro[0];
+//        sharedSEN->IMUData.gyro(1) = Gyro[1];
+//        sharedSEN->IMUData.gyro(2) = Gyro[2];
+
+//        sharedSEN->W_body_pos(0) = P[0];
+//        sharedSEN->W_body_pos(1) = P[1];
+//        sharedSEN->W_body_pos(2) = P[2];
+
+
         for(int i=0; i<3 ; i++){
             simData->choreonoid_acc[i] = Acc[i];
             simData->choreonoid_gyro[i] = Gyro[i];
             simData->choreonoid_W_body_pos[i] = P[i];
+
+//            sharedSEN->IMUData.acc(i) = Acc[i];
+//            sharedSEN->IMUData.gyro(i) = Gyro[i];
+//            sharedSEN->W_body_pos(i) = P[i];
         }
 
- 
+
+
        simData->choreonoid_quat[0] = Qt.w();
        simData->choreonoid_quat[1] = Qt.x();
        simData->choreonoid_quat[2] = Qt.y();
        simData->choreonoid_quat[3] = Qt.z();
 
+//       sharedSEN->IMUData.quat(0) = Qt.w();
+//       sharedSEN->IMUData.quat(1) = Qt.x();
+//       sharedSEN->IMUData.quat(2) = Qt.y();
+//       sharedSEN->IMUData.quat(3) = Qt.z();
 
 
-        //pio->os() <<Gyro[0] <<" "<<Gyro[1] <<" "<<Gyro[2] <<" "<<endl;
+
+//        pio->os() <<Gyro[0] <<" "<<Gyro[1] <<" "<<Gyro[2] <<" "<<endl;
         //pio->os() <<Acc[0] <<" "<<Acc[1] <<" "<<Acc[2] <<" "<<endl;
 
         ///----- Go to Initial Position during INIT steptime--------
@@ -496,6 +360,7 @@ public:
         ///------Joint Position Control ---------------------------------
         getPosRef();
         getGains();
+
         for(int i=0; i < body->numJoints(); ++i){
 
             Link* joint = body->joint(i);
@@ -529,19 +394,7 @@ public:
         ///------ Total Joint input------------------------------------------------
         for(int i=0; i<body->numJoints(); i++){
             Link* joint = body->joint(i);
-
-            double jointTorque;
-
-            if(q[i] >= lowerJLim[i]*D2R && q[i] <= upperJLim[i]*D2R){
-                jointTorque = LimitFunction(jointInput[i], TauLim[i], -TauLim[i]);
-            }
-            else if(q[i] < lowerJLim[i]*D2R){
-                jointTorque = (- dq[i])*30.0 + ((lowerJLim[i]*D2R + 0.0*D2R) - q[i])*1500;
-            }
-            else if(q[i] > upperJLim[i]*D2R){
-                jointTorque = (- dq[i])*30.0 + ((upperJLim[i]*D2R - 0.0*D2R) - q[i])*1500;
-            }
-            joint->u() = jointTorque;
+            joint->u() = LimitFunction(jointInput[i], 50.0, -50.0);
         }
 
 
@@ -574,6 +427,7 @@ public:
             F_FLFT[i] = FT_FLFT[i];
         }
 
+
         Vector3 HRFT_global = R_HRFT*F_HRFT;
         Vector3 HLFT_global = R_HLFT*F_HLFT;
         Vector3 FRFT_global = R_FRFT*F_FRFT;
@@ -585,8 +439,11 @@ public:
             simData->chorednoid_ReactionF_FR[i] = FRFT_global[i];
             simData->chorednoid_ReactionF_FL[i] = FLFT_global[i];
 
+//            sharedSEN->F_foot_force[0](i) = F_HRFT[i];
+//            sharedSEN->F_foot_force[1](i) = F_HLFT[i];
+//            sharedSEN->F_foot_force[2](i) = F_FRFT[i];
+//            sharedSEN->F_foot_force[3](i) = F_FLFT[i];
         }
-
 
         //pio->os()<< HRFT_global.x()<<", "<<HRFT_global.y()<<", "<<HRFT_global.z()<<endl;
         //pio->os()<< R_HRFT<<endl;
@@ -597,34 +454,6 @@ public:
             //pio->os()<<"1 tic"<<endl;
         }
         cnt++;
-
-        // 마커 위치 업데이트
-//        Vector3f markerPosition = Vector3f(0,0,0.5); // 업데이트하고자 하는 위치
-//        updateMarkerPosition(markerPosition);
-
-        Vector3 newPosition_zmpRef(simData->pos_zmpRef[0], simData->pos_zmpRef[1], simData->pos_zmpRef[2]); // 원하는 위치로 설정
-        updatezmpRefPosition(R*newPosition_zmpRef + P);
-
-        Vector3 newPosition_comRef(simData->pos_comRef[0], simData->pos_comRef[1], simData->pos_comRef[2]);
-        updatecomRefPosition(R*newPosition_comRef + P);
-
-        if(simData->CommandRef_swingState[0] > 0.2 && simData->CommandRef_swingState[0] < 0.6 && simData->CommandRef_contact[0] == 0){
-            Vector3 newPosition_foot(simData->pos_pfoot0[0], simData->pos_pfoot0[1], simData->pos_pfoot0[2]);
-            updatefootPosition0(R*newPosition_foot + P);
-        }
-        if(simData->CommandRef_swingState[1] > 0.2 && simData->CommandRef_swingState[1] < 0.6 && simData->CommandRef_contact[1] == 0){
-            Vector3 newPosition_foot(simData->pos_pfoot1[0], simData->pos_pfoot1[1], simData->pos_pfoot1[2]);
-            updatefootPosition1(R*newPosition_foot + P);
-        }
-        if(simData->CommandRef_swingState[2] > 0.2 && simData->CommandRef_swingState[2] < 0.6 && simData->CommandRef_contact[2] == 0){
-            Vector3 newPosition_foot(simData->pos_pfoot2[0], simData->pos_pfoot2[1], simData->pos_pfoot2[2]);
-            updatefootPosition2(R*newPosition_foot + P);
-        }
-        if(simData->CommandRef_swingState[3] > 0.2 && simData->CommandRef_swingState[3] < 0.6 && simData->CommandRef_contact[3] == 0){
-            Vector3 newPosition_foot(simData->pos_pfoot3[0], simData->pos_pfoot3[1], simData->pos_pfoot3[2]);
-            updatefootPosition3(R*newPosition_foot + P);
-        }
-
         return true;
     }
 

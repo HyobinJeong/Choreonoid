@@ -2,7 +2,7 @@ format: ChoreonoidBody
 formatVersion: 1.0
 angleUnit: degree
 
-name: RBQ-3
+name: RBQ-10
 rootLink: WAIST
 
 links:
@@ -10,18 +10,18 @@ links:
     name: WAIST
     jointType: free
     translation: [ 0, 0, 0.3135 ]
-    centerOfMass: [ -0.00, 0, 0.0 ]
-    mass: 11.5765
+    centerOfMass: [ 0.0, 0, 0.0 ]
+    mass: 15.0
     inertia: [
-      0.070908096, 0.001976068, 0.009267259,
-      0.001976068, 0.476924345, -0.000149917,
-      0.009267259, -0.000149917, 0.485757972 ]
+      0.0649, -0.000875, 0.000538,
+      -0.000875, 0.170, -0.000063,
+      0.000538, -0.000063, 0.2217 ]
     elements:
       -
         type: Shape
         appearance: &WaistAppearance
           material: {diffuseColor: [ 0.3, 0.3, 0.3 ] }
-        geometry: { type: Box, size: [ 0.37, 0.21, 0.07 ] }
+        geometry: { type: Box, size: [ 0.43, 0.25, 0.09 ] }
       -
         type: AccelerationSensor
         name: WaistAccelSensor
@@ -36,16 +36,16 @@ links:
     jointType: revolute
     jointAxis: [ 1, 0, 0 ]
     jointId: 0
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.0001496566
+    gearRatio: 13
     jointRange: [ -180, 180 ]
-    translation: [ -0.234, -0.07946, 0 ]
-    centerOfMass: [ -0.0045,0.017,0.0004 ]
-    mass: 1.6
+    translation: [ -0.3125, -0.088, 0 ]
+    centerOfMass: [ 0.04,0.0,0.0 ]
+    mass: 3.2
     inertia: [
-      0.001541447, -0.000013604, 0.000006180,
-      -0.000013604, 0.001976742, -0.000083792,
-      0.000006180, -0.000083792, 0.001469855 ]
+      0.005, -0.0, 0.0,
+      -0.0, 0.001688, -0.0,
+      0.0, -0.0, 0.003536 ]
     elements: &Hind_Right_RollShape
       -
         type: Transform
@@ -70,16 +70,16 @@ links:
     jointType: revolute
     jointAxis: [ 0, 1, 0 ]
     jointId: 1
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.0001496566
+    gearRatio: 13
     jointRange: [ -360, 360 ]
-    translation: [ 0, -0.06995, 0 ]
-    centerOfMass: [ -0.00026,0.007,-0.04112 ]
-    mass: 1.8
+    translation: [ 0, -0.10, 0 ]
+    centerOfMass: [ -0.0,0.0,-0.04 ]
+    mass: 2.0
     inertia: [
-      0.011590515, 0.000021740, 0.000496432,
-      0.000021740, 0.011996886, 0.001678318,
-      0.000496432, 0.001678318, 0.002999047 ]
+      0.005338, -0.000036, 0.000376,
+      -0.000036, 0.005691, -0.000322,
+      0.000376, -0.000322, 0.000814 ]
     elements: &PitchShape
       - 
         type: Transform
@@ -92,10 +92,10 @@ links:
                 diffuseColor: [ 0.578, 0.0, 0.824 ]
       - 
         type: Transform
-        translation: [-0.0, -0.0, -0.1125]
+        translation: [-0.0, -0.0, -0.14]
         elements:
           Shape:
-            geometry: { type: Box, size: [ 0.04, 0.025, 0.225 ] }
+            geometry: { type: Box, size: [ 0.06, 0.025, 0.30 ] }
             appearance:
               material: 
                 diffuseColor: [ 0.5, 0.5, 0.5 ]
@@ -105,16 +105,16 @@ links:
     jointType: revolute
     jointAxis: [ 0, 1, 0 ]
     jointId: 2
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.000169145
+    gearRatio: 14
     jointRange: [ -150, 0 ]
-    translation: [ 0, 0, -0.225 ]
-    centerOfMass: [ 0.0075,0.00035,-0.08803 ]
+    translation: [ 0, 0, -0.30 ]
+    centerOfMass: [ 0.005249,0.00129,-0.094565 ]
     mass: 0.2
     inertia: [
-      0.000586375, -0.000000042, 0.000010702,
-      -0.000000042, 0.011996886, 0.000,
-      0.000010702, 0.000, 0.000015962 ]
+      0.002035, -0.0, 0.0,
+      -0.0, 0.002053, 0.0,
+      0.0, 0.0, 0.000035 ]
     elements: &KneeShape
       - 
         type: Transform
@@ -127,23 +127,23 @@ links:
                 diffuseColor: [ 0.6, 0.6, 0.6 ]
       - 
         type: Transform
-        translation: [-0.0, -0.0, -0.1125]
+        translation: [-0.0, -0.0, -0.14]
         elements:
           Shape:
-            geometry: { type: Box, size: [ 0.025, 0.02, 0.225 ] }
+            geometry: { type: Box, size: [ 0.04, 0.02, 0.30 ] }
             appearance: *Knee_Appearance
   -
     name: HIND_R_FT
     parent: HIND_R_KNEE
     jointType: fixed
-    translation: [ 0, 0, -0.225 ]
+    translation: [ 0, 0, -0.30 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
     material: Sole
     inertia: [
-      0.001, 0, 0,
-      0, 0.001, 0,
-      0, 0, 0.001 ]
+      0.01, 0, 0,
+      0, 0.01, 0,
+      0, 0, 0.01 ]
     elements:
       - 
         type: Transform
@@ -167,16 +167,16 @@ links:
     jointType: revolute
     jointAxis: [ 1, 0, 0 ]
     jointId: 3
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.0001496566
+    gearRatio: 13
     jointRange: [ -180, 180 ]
-    translation: [ -0.234, 0.07946, 0 ]
-    centerOfMass: [ -0.0045,-0.017,0.0004 ]
-    mass: 1.6
+    translation: [ -0.3125, 0.088, 0 ]
+    centerOfMass: [ 0.04,-0.0,0.0 ]
+    mass: 3.2
     inertia: [
-      0.001541447, -0.000013604, 0.000006180,
-      -0.000013604, 0.001976742, -0.000083792,
-      0.000006180, -0.000083792, 0.001469855  ]
+      0.005, -0.0, 0.0,
+      -0.0, 0.001688, -0.0,
+      0.0, -0.0, 0.003536 ]
     elements: &Hind_Left_RollShape
       -
         type: Transform
@@ -199,16 +199,16 @@ links:
     jointType: revolute
     jointAxis: [ 0, 1, 0 ]
     jointId: 4
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.0001496566
+    gearRatio: 13
     jointRange: [ -360, 360 ]
-    translation: [ 0, +0.06995, 0 ]
-    centerOfMass: [ -0.00026,-0.007,-0.04112 ]
-    mass: 1.8
+    translation: [ 0, +0.10, 0 ]
+    centerOfMass: [ -0.0,0.0,-0.04 ]
+    mass: 2.0
     inertia: [
-      0.011590515, 0.000021740, 0.000496432,
-      0.000021740, 0.011996886, 0.001678318,
-      0.000496432, 0.001678318, 0.002999047 ]
+      0.005338, 0.000036, 0.000376,
+      0.000036, 0.005691, 0.000322,
+      0.000376, 0.000322, 0.000814 ]
     elements: *PitchShape
   -
     name: HIND_L_KNEE
@@ -216,29 +216,29 @@ links:
     jointType: revolute
     jointAxis: [ 0, 1, 0 ]
     jointId: 5
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.000169145
+    gearRatio: 14
     jointRange: [ -150, 0 ]
-    translation: [ 0, 0, -0.225 ]
-    centerOfMass: [ 0.0075,-0.00035,-0.08803 ]
+    translation: [ 0, 0, -0.3 ]
+    centerOfMass: [ 0.005249,-0.00129,-0.094565 ]
     mass: 0.2
     inertia: [
-      0.000586375, -0.000000042, 0.000010702,
-      -0.000000042, 0.011996886, 0.000,
-      0.000010702, 0.000, 0.000015962 ]
+      0.002035, -0.0, 0.0,
+      -0.0, 0.002053, 0.0,
+      0.0, 0.0, 0.000035 ]
     elements: *KneeShape
   -
     name: HIND_L_FT
     parent: HIND_L_KNEE
     jointType: fixed
-    translation: [ 0, 0, -0.225 ]
+    translation: [ 0, 0, -0.3 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
     material: Sole
     inertia: [
-      0.001, 0, 0,
-      0, 0.001, 0,
-      0, 0, 0.001 ]
+      0.01, 0, 0,
+      0, 0.01, 0,
+      0, 0, 0.01 ]
     elements:
       - 
         type: Transform
@@ -260,16 +260,16 @@ links:
     jointType: revolute
     jointAxis: [ 1, 0, 0 ]
     jointId: 6
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.0001496566
+    gearRatio: 13
     jointRange: [ -180, 180 ]
-    translation: [ 0.234, -0.07946, 0 ]
-    centerOfMass: [ -0.0045,0.017,0.0004 ]
-    mass: 1.6
+    translation: [ 0.3125, -0.088, 0 ]
+    centerOfMass: [ -0.04,0.0,0.0 ]
+    mass: 3.2
     inertia: [
-      0.001541447, -0.000013604, 0.000006180,
-      -0.000013604, 0.001976742, -0.000083792,
-      0.000006180, -0.000083792, 0.001469855 ]
+      0.005, -0.0, 0.0,
+      -0.0, 0.001688, -0.0,
+      0.0, -0.0, 0.003536 ]
     elements: &FRONT_RIGHT_RollShape
       -
         type: Transform
@@ -292,16 +292,16 @@ links:
     jointType: revolute
     jointAxis: [ 0, 1, 0 ]
     jointId: 7
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.0001496566
+    gearRatio: 13
     jointRange: [ -360, 360 ]
-    translation: [ 0, -0.06995, 0 ]
-    centerOfMass: [ -0.00026,0.007,-0.04112 ]
-    mass: 1.8
+    translation: [ 0, -0.10, 0 ]
+    centerOfMass: [ -0.0,0.0,-0.04 ]
+    mass: 2.0
     inertia: [
-      0.011590515, 0.000021740, 0.000496432,
-      0.000021740, 0.011996886, 0.001678318,
-      0.000496432, 0.001678318, 0.002999047 ]
+      0.005338, -0.000036, 0.000376,
+      -0.000036, 0.005691, -0.000322,
+      0.000376, -0.000322, 0.000814 ]
     elements: *PitchShape
   -
     name: FRONT_R_KNEE
@@ -309,29 +309,29 @@ links:
     jointType: revolute
     jointAxis: [ 0, 1, 0 ]
     jointId: 8
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.000169145
+    gearRatio: 14
     jointRange: [ -150, 0 ]
-    translation: [ 0, 0, -0.225 ]
-    centerOfMass: [ 0.0075,0.00035,-0.08803 ]
+    translation: [ 0, 0, -0.3 ]
+    centerOfMass: [ 0.005249,0.00129,-0.094565 ]
     mass: 0.2
     inertia: [
-      0.000586375, -0.000000042, 0.000010702,
-      -0.000000042, 0.011996886, 0.000,
-      0.000010702, 0.000, 0.000015962 ]
+      0.002035, -0.0, 0.0,
+      -0.0, 0.002053, 0.0,
+      0.0, 0.0, 0.000035 ]
     elements: *KneeShape
   -
     name: FRONT_R_FT
     parent: FRONT_R_KNEE
     jointType: fixed
-    translation: [ 0, 0, -0.225 ]
+    translation: [ 0, 0, -0.3 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
     material: TankTracks
     inertia: [
-      0.001, 0, 0,
-      0, 0.001, 0,
-      0, 0, 0.001 ]
+      0.01, 0, 0,
+      0, 0.01, 0,
+      0, 0, 0.01 ]
     elements:
       - 
         type: Transform
@@ -354,16 +354,16 @@ links:
     jointType: revolute
     jointAxis: [ 1, 0, 0 ]
     jointId: 9
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.0001496566
+    gearRatio: 13
     jointRange: [ -180, 180 ]
-    translation: [ 0.234, 0.07946, 0 ]
-    centerOfMass: [ -0.0045,-0.017,0.0004 ]
-    mass: 1.6
+    translation: [ 0.3125, 0.088, 0 ]
+    centerOfMass: [ -0.04,-0.0,0.0 ]
+    mass: 3.2
     inertia: [
-      0.001541447, -0.000013604, 0.000006180,
-      -0.000013604, 0.001976742, -0.000083792,
-      0.000006180, -0.000083792, 0.001469855 ]
+      0.005, -0.0, 0.0,
+      -0.0, 0.001688, -0.0,
+      0.0, -0.0, 0.003536 ]
     elements: &FRONT_LEFT_RollShape
       -
         type: Transform
@@ -386,16 +386,16 @@ links:
     jointType: revolute
     jointAxis: [ 0, 1, 0 ]
     jointId: 10
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.0001496566
+    gearRatio: 13
     jointRange: [ -360, 360 ]
-    translation: [ 0, 0.06995, 0 ]
-    centerOfMass: [ -0.00026,-0.007,-0.04112 ]
-    mass: 1.8
+    translation: [ 0, 0.1, 0 ]
+    centerOfMass: [ -0.0,0.0,-0.04 ]
+    mass: 2.0
     inertia: [
-      0.011590515, 0.000021740, 0.000496432,
-      0.000021740, 0.011996886, 0.001678318,
-      0.000496432, 0.001678318, 0.002999047 ]
+      0.005338, 0.000036, 0.000376,
+      0.000036, 0.005691, 0.000322,
+      0.000376, 0.000322, 0.000814 ]
     elements: *PitchShape
   -
     name: FRONT_L_KNEE
@@ -403,29 +403,29 @@ links:
     jointType: revolute
     jointAxis: [ 0, 1, 0 ]
     jointId: 11
-    rotorInertia: 0.000072
-    gearRatio: 11
+    rotorInertia: 0.000169145
+    gearRatio: 14
     jointRange: [ -150, 0 ]
-    translation: [ 0, 0, -0.225 ]
-    centerOfMass: [ 0.0075,-0.00035,-0.08803 ]
+    translation: [ 0, 0, -0.3 ]
+    centerOfMass: [ 0.005249,-0.00129,-0.094565 ]
     mass: 0.2
     inertia: [
-       0.000586375, -0.000000042, 0.000010702,
-      -0.000000042, 0.011996886, 0.000,
-      0.000010702, 0.000, 0.000015962 ]
+      0.002035, -0.0, 0.0,
+      -0.0, 0.002053, 0.0,
+      0.0, 0.0, 0.000035 ]
     elements: *KneeShape
   -
     name: FRONT_L_FT
     parent: FRONT_L_KNEE
     jointType: fixed
-    translation: [ 0, 0, -0.225 ]
+    translation: [ 0, 0, -0.3 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
     mass: 0.001
     material: Sole
     inertia: [
-      0.001, 0, 0,
-      0, 0.001, 0,
-      0, 0, 0.001 ]
+      0.01, 0, 0,
+      0, 0.01, 0,
+      0, 0, 0.01 ]
     elements:
       - 
         type: Transform

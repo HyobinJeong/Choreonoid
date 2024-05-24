@@ -54,7 +54,7 @@ public:
             double dq = (q - qold[i]) / dt;
             double u = (qref[i] - q) * pgain[i] + (0.0 - dq) * dgain[i];
             qold[i] = q;
-            joint->u() = 0;//u;
+            joint->u() = u;
         }
         return true;
     }

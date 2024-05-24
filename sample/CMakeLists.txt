@@ -27,5 +27,5 @@ add_subdirectory(Roki)
 add_subdirectory(CameraImageOverlay)
 add_subdirectory(JoystickTest)
 add_subdirectory(WRS2018)
-add_subdirectory(HUBOPLUGIN)
 add_subdirectory(RBQController)
+

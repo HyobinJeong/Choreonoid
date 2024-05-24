@@ -16,28 +16,28 @@ items:
       children: 
         - 
           id: 2
-          name: "RBQ-3"
+          name: "RBQ-10"
           plugin: Body
           class: BodyItem
           data: 
-            modelFile: "${PROJECT_DIR}/RBQ-3.body"
+            modelFile: "${PROJECT_DIR}/RBQ-10.body"
             currentBaseLink: "WAIST"
-            rootPosition: [ -0.00722479854, -9.75002017e-06, 0.352281553 ]
+            rootPosition: [ -0.0166711403, -0.00192789462, 0.383979679 ]
             rootAttitude: [ 
-              0.999999947, 0.000280504366, -0.000162882763, 
-              -0.000280504617, 0.999999961, -1.51547773e-06, 
-              0.000162882331, 1.56116702e-06, 0.999999987 ]
+              0.999997846, 0.00146315116, -0.00147228085, 
+              -0.00146332957, 0.999998922, -0.000120109809, 
+              0.00147210352, 0.000122263982, 0.999998909 ]
             jointPositions: [ 
-               0.000090,  0.785092, -1.510812, -0.000087,  0.785099, -1.510807, -0.000237,  0.784940, -1.510149,  0.000234, 
-               0.784942, -1.510147 ]
-            initialRootPosition: [ 0, 0, 0.5 ]
+               0.000570,  0.605649, -1.258692, -0.000349,  0.606094, -1.258356, -0.000923,  0.608116, -1.252847,  0.000753, 
+               0.608429, -1.252688,  0.000000,  2.261800, -2.261800,  0.000000,  0.000000,  0.000000,  0.000000  ]
+            initialRootPosition: [ 0, 0, 0.65 ]
             initialRootAttitude: [ 
               1, 0, 0, 
               0, 1, 0, 
               0, 0, 1 ]
             initialJointPositions: [ 
                0.000000,  0.000000,  0.000000,  0.000000,  0.000000,  0.000000,  0.000000,  0.000000,  0.000000,  0.000000, 
-               0.000000,  0.000000 ]
+               0.000000,  0.000000,  0.000000,  0.000000, -0.000000,  0.000000,  0.000000,  0.000000,  0.000000 ]
             zmp: [ 0, 0, 0 ]
             collisionDetection: true
             selfCollisionDetection: false
@@ -114,8 +114,8 @@ items:
                 dynamicsMode: "Forward dynamics"
                 integrationMode: "Runge Kutta"
                 gravity: [ 0, 0, -9.80665 ]
-                staticFriction: 0.7
-                dynamicFriction: 0.7
+                staticFriction: 0.5
+                dynamicFriction: 0.5
                 cullingThresh: 0.01
                 contactCullingDepth: 0.05
                 errorCriterion: 0.001
@@ -125,29 +125,190 @@ items:
                 kinematicWalking: false
                 2Dmode: false
                 oldAccelSensorMode: false
-                
         - 
           id: 8
-          name: "tilt_plane"
+          name: "box0"
           plugin: Body
           class: BodyItem
           data: 
-            modelFile: "${PROJECT_DIR}/tilt_plane.body"
-            currentBaseLink: ""
-            rootPosition: [ 0, 3, 0 ]
+            modelFile: "${PROJECT_DIR}/box0.body"
+            currentBaseLink: "WAIST"
+            rootPosition: [ 2.9418227, -4.40646249e-06, 0.0199612314 ]
+            rootAttitude: [ 
+              0.999999917, -2.17309808e-05, -0.000408003453, 
+              2.17311102e-05, 1, 3.12819262e-07, 
+              0.000408003446, -3.21685604e-07, 0.999999917 ]
+            jointPositions: [  ]
+            initialRootPosition: [ 3, 0, 0.1 ]
+            initialRootAttitude: [ 
+              0.707106781, 0, 0.707106781, 
+              0, 1, 0, 
+              -0.707106781, 0, 0.707106781 ]
+            zmp: [ 0, 0, 0 ]
+            collisionDetection: true
+            selfCollisionDetection: false
+            isEditable: true
+        - 
+          id: 9
+          name: "box1"
+          plugin: Body
+          class: BodyItem
+          data: 
+            modelFile: "${PROJECT_DIR}/box1.body"
+            currentBaseLink: "WAIST"
+            rootPosition: [ 3, 0.4, 0.0199000043 ]
+            rootAttitude: [ 
+              0.70710678, -0.707106782, -2.2443942e-08, 
+              0.707106782, 0.70710678, -2.8475169e-10, 
+              1.60716134e-08, -1.56689138e-08, 1 ]
+            jointPositions: [  ]
+            initialRootPosition: [ 3, 0.4, 0.2 ]
+            initialRootAttitude: [ 
+              0.707106781, -0.707106781, 0, 
+              0.707106781, 0.707106781, 0, 
+              0, 0, 1 ]
+            zmp: [ 0, 0, 0 ]
+            collisionDetection: true
+            selfCollisionDetection: false
+            isEditable: true
+        - 
+          id: 10
+          name: "box2"
+          plugin: Body
+          class: BodyItem
+          data: 
+            modelFile: "${PROJECT_DIR}/box2.body"
+            currentBaseLink: "WAIST"
+            rootPosition: [ 3.5, 0.2, 0.0199000044 ]
+            rootAttitude: [ 
+              0.342020144, -0.939692621, -2.10941984e-08, 
+              0.939692621, 0.342020144, -9.39141227e-09, 
+              1.60396816e-08, -1.66100104e-08, 1 ]
+            jointPositions: [  ]
+            initialRootPosition: [ 3.5, 0.2, 0.2 ]
+            initialRootAttitude: [ 
+              0.342020143, -0.939692621, 0, 
+              0.939692621, 0.342020143, 0, 
+              0, 0, 1 ]
+            zmp: [ 0, 0, 0 ]
+            collisionDetection: true
+            selfCollisionDetection: false
+            isEditable: true
+        - 
+          id: 11
+          name: "level_plate"
+          plugin: Body
+          class: BodyItem
+          data: 
+            modelFile: "${PROJECT_DIR}/level_plate1.body"
+            currentBaseLink: "First_Stair"
+            rootPosition: [ 1.1, 2.5, 0.04 ]
             rootAttitude: [ 
               1, 0, 0, 
               0, 1, 0, 
               0, 0, 1 ]
             jointPositions: [  ]
-            initialRootPosition: [ 0, 3, 0 ]
+            initialRootPosition: [ 1.1, 2.5, 0.04 ]
             initialRootAttitude: [ 
               1, 0, 0, 
               0, 1, 0, 
               0, 0, 1 ]
+            zmp: [ 0, 0, 0 ]
             collisionDetection: true
             selfCollisionDetection: false
             isEditable: false
+        - 
+          id: 12
+          name: "level_plate"
+          plugin: Body
+          class: BodyItem
+          data: 
+            modelFile: "${PROJECT_DIR}/level_plate2.body"
+            currentBaseLink: "First_Stair"
+            rootPosition: [ -1.1, 2.5, 0.075 ]
+            rootAttitude: [ 
+              1, 0, 0, 
+              0, 1, 0, 
+              0, 0, 1 ]
+            jointPositions: [  ]
+            initialRootPosition: [ -1.1, 2.5, 0.075 ]
+            initialRootAttitude: [ 
+              1, 0, 0, 
+              0, 1, 0, 
+              0, 0, 1 ]
+            zmp: [ 0, 0, 0 ]
+            collisionDetection: true
+            selfCollisionDetection: false
+            isEditable: false
+        - 
+          id: 13
+          name: "tilt_plane"
+          plugin: Body
+          class: BodyItem
+          data: 
+            modelFile: "${PROJECT_DIR}/tilt_plane.body"
+            currentBaseLink: "WAIST"
+            rootPosition: [ 0, 0, 0 ]
+            rootAttitude: [ 
+              1, 0, 0, 
+              0, 1, 0, 
+              0, 0, 1 ]
+            jointPositions: [  ]
+            initialRootPosition: [ 0, 0, 0 ]
+            initialRootAttitude: [ 
+              1, 0, 0, 
+              0, 1, 0, 
+              0, 0, 1 ]
+            zmp: [ 0, 0, 0 ]
+            collisionDetection: true
+            selfCollisionDetection: false
+            isEditable: false
+        - 
+          id: 14
+          name: "stair_6cm"
+          plugin: Body
+          class: BodyItem
+          data: 
+            modelFile: "${PROJECT_DIR}/staircase_w15_h6.body"
+            currentBaseLink: "First_Stair"
+            rootPosition: [ -2, -3, 0.01 ]
+            rootAttitude: [ 
+              -1, -1.2246468e-16, 0, 
+              1.2246468e-16, -1, 0, 
+              0, 0, 1 ]
+            jointPositions: [  ]
+            initialRootPosition: [ -2, -3, 0.01 ]
+            initialRootAttitude: [ 
+              -1, -1.2246468e-16, 0, 
+              1.2246468e-16, -1, 0, 
+              0, 0, 1 ]
+            zmp: [ 0, 0, 0 ]
+            collisionDetection: true
+            selfCollisionDetection: false
+            isEditable: false
+        - 
+          id: 15
+          name: "block"
+          plugin: Body
+          class: BodyItem
+          data: 
+            modelFile: "${PROJECT_DIR}/block.body"
+            currentBaseLink: "WAIST"
+            rootPosition: [ 1.25000121, -1.23813586e-06, 0.0499182694 ]
+            rootAttitude: [ 
+              1, -3.06233031e-07, -7.10620977e-06, 
+              3.06037707e-07, 1, -2.74862402e-05, 
+              7.10621819e-06, 2.7486238e-05, 1 ]
+            jointPositions: [  ]
+            initialRootPosition: [ 1.25, 0, 0.05 ]
+            initialRootAttitude: [ 
+              1, 0, 0, 
+              0, 1, 0, 
+              0, 0, 1 ]
+            zmp: [ 0, 0, 0 ]
+            collisionDetection: true
+            selfCollisionDetection: false
+            isEditable: true
 views: 
   - 
     id: 0
@@ -161,8 +322,8 @@ views:
     mounted: true
     state: 
       selected: [ 7 ]
-      checked: [ 1, 2, [ 4, "ForceSensor" ] ]
-      expanded: [ 1, 2, 3, 4, 6, 7 ]
+      checked: [ 1, 2, [ 4, "ForceSensor" ], 8, 9, 10, 11, 12, 13, 14, 15 ]
+      expanded: [ 1, 2, 3, 4, 6, 7, 8, 9, 10, 15 ]
   - 
     id: 2
     plugin: Base
@@ -213,9 +374,9 @@ views:
           fieldOfView: 0.6978
           near: 0.01
           far: 10000
-          eye: [ 2.06654537, 5.93151646, 4.64436769 ]
-          direction: [ -0.253217348, -0.699880547, -0.667868397 ]
-          up: [ -0.227220943, -0.628027737, 0.744279386 ]
+          eye: [ 3.77766321, 13.690392, 10.9342007 ]
+          direction: [ -0.293060256, -0.776747973, -0.557474908 ]
+          up: [ -0.196789884, -0.521586057, 0.830193789 ]
         - 
           camera: [ System, Orthographic ]
           orthoHeight: 20
@@ -276,16 +437,14 @@ views:
 toolbars: 
   "TimeBar": 
     minTime: 0
-    maxTime: 475.388
+    maxTime: 2231.81
     frameRate: 1000
     playbackFrameRate: 60
     idleLoopDrivenMode: false
-    currentTime: 6.628
+    currentTime: 3.991
     speedScale: 1
     syncToOngoingUpdates: true
     autoExpansion: true
-  "LeggedBodyBar": 
-    stanceWidth: 0.15
   "KinematicsBar": 
     mode: AUTO
     enablePositionDragger: true
@@ -296,6 +455,8 @@ toolbars:
     lazyCollisionDetectionMode: true
   "BodyBar": 
     current: 2
+  "LeggedBodyBar": 
+    stanceWidth: 0.15
   "BodyMotionGenerationBar": 
     autoGenerationForNewBody: true
     balancer: false
@@ -339,6 +500,46 @@ Body:
         showCenterOfMass: false
         showPpcom: false
         showZmp: false
+      - 
+        bodyItem: 8
+        showCenterOfMass: false
+        showPpcom: false
+        showZmp: false
+      - 
+        bodyItem: 9
+        showCenterOfMass: false
+        showPpcom: false
+        showZmp: false
+      - 
+        bodyItem: 10
+        showCenterOfMass: false
+        showPpcom: false
+        showZmp: false
+      - 
+        bodyItem: 11
+        showCenterOfMass: false
+        showPpcom: false
+        showZmp: false
+      - 
+        bodyItem: 12
+        showCenterOfMass: false
+        showPpcom: false
+        showZmp: false
+      - 
+        bodyItem: 13
+        showCenterOfMass: false
+        showPpcom: false
+        showZmp: false
+      - 
+        bodyItem: 14
+        showCenterOfMass: false
+        showPpcom: false
+        showZmp: false
+      - 
+        bodyItem: 15
+        showCenterOfMass: false
+        showPpcom: false
+        showZmp: false
     staticModelEditing: true
   "KinematicFaultChecker": 
     checkJointPositions: true
@@ -361,12 +562,12 @@ viewAreas:
     contents: 
       type: splitter
       orientation: horizontal
-      sizes: [ 218, 1027 ]
+      sizes: [ 323, 1521 ]
       children: 
         - 
           type: splitter
           orientation: vertical
-          sizes: [ 376, 376 ]
+          sizes: [ 554, 348 ]
           children: 
             - 
               type: pane
@@ -379,12 +580,12 @@ viewAreas:
         - 
           type: splitter
           orientation: vertical
-          sizes: [ 536, 216 ]
+          sizes: [ 758, 144 ]
           children: 
             - 
               type: splitter
               orientation: horizontal
-              sizes: [ 452, 571 ]
+              sizes: [ 0, 1517 ]
               children: 
                 - 
                   type: pane
