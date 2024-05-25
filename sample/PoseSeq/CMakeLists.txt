@@ -5,6 +5,7 @@ endif()
 set(motion_files
   motion/GR001/SampleMotion1.pseq
   motion/RIC30/SampleMotion1.pseq
+  motion/SR1/SR1WalkPattern2.pseq
   )
 
 foreach(file ${motion_files})
@@ -14,7 +15,4 @@ foreach(file ${motion_files})
   install(FILES ${file} DESTINATION ${CNOID_SHARE_SUBDIR}/${dir})
 endforeach()
 
-install(FILES
-  GR001.cnoid
-  RIC30.cnoid
-  DESTINATION ${CNOID_SHARE_SUBDIR}/project)
+install_project_files(GR001.cnoid RIC30.cnoid)

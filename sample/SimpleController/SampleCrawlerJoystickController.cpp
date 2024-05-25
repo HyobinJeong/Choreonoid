@@ -29,16 +29,14 @@ public:
             return false;
         }
 
-        crawlerL->setActuationMode(Link::JOINT_SURFACE_VELOCITY);
-        crawlerR->setActuationMode(Link::JOINT_SURFACE_VELOCITY);
-        io->enableOutput(crawlerL);
-        io->enableOutput(crawlerR);
+        io->enableOutput(crawlerL, JointVelocity);
+        io->enableOutput(crawlerR, JointVelocity);
 
         for(int i=0; i < 2; i++){
             qRef[i] = 0;
         }
 
-        if(!joystick.isReady()){
+        if(!joystick.makeReady()){
             os << "Joystick is not ready: " << joystick.errorMessage() << std::endl;
         }
         if(joystick.numAxes() < 5){

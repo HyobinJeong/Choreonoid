@@ -11,6 +11,7 @@ items:
       name: "World"
       plugin: Body
       class: WorldItem
+      is_checked: true
       data: 
         collisionDetection: false
         collisionDetector: AISTCollisionDetector
@@ -20,6 +21,7 @@ items:
           name: "SR1"
           plugin: Body
           class: BodyItem
+          is_checked: true
           data: 
             modelFile: "${SHARE}/model/SR1/SR1.body"
             currentBaseLink: "WAIST"
@@ -102,16 +104,8 @@ items:
                 recordCollisionData: false
                 controllerOptions: 
                 dynamicsMode: "Forward dynamics"
-                integrationMode: "Runge Kutta"
+                integrationMode: semi-implicit_euler
                 gravity: [ 0, 0, -9.80665 ]
-                staticFriction: 0.5
-                slipFriction: 0.5
-                cullingThresh: 0.01
-                contactCullingDepth: 0.05
-                errorCriterion: 0.001
-                maxNumIterations: 1000
-                contactCorrectionDepth: 0.0001
-                contactCorrectionVelocityRatio: 30
                 kinematicWalking: false
                 2Dmode: false
             - 
@@ -131,16 +125,8 @@ items:
                 recordCollisionData: false
                 controllerOptions: position
                 dynamicsMode: "Forward dynamics"
-                integrationMode: "Runge Kutta"
+                integrationMode: semi-implicit_euler
                 gravity: [ 0, 0, -9.80665 ]
-                staticFriction: 0.5
-                slipFriction: 0.5
-                cullingThresh: 0.01
-                contactCullingDepth: 0.05
-                errorCriterion: 0.001
-                maxNumIterations: 1000
-                contactCorrectionDepth: 0.0001
-                contactCorrectionVelocityRatio: 30
                 kinematicWalking: false
                 2Dmode: false
             - 
@@ -160,16 +146,8 @@ items:
                 recordCollisionData: false
                 controllerOptions: velocity
                 dynamicsMode: "Forward dynamics"
-                integrationMode: "Runge Kutta"
+                integrationMode: semi-implicit_euler
                 gravity: [ 0, 0, -9.80665 ]
-                staticFriction: 0.5
-                slipFriction: 0.5
-                cullingThresh: 0.01
-                contactCullingDepth: 0.05
-                errorCriterion: 0.001
-                maxNumIterations: 1000
-                contactCorrectionDepth: 0.0001
-                contactCorrectionVelocityRatio: 30
                 kinematicWalking: false
                 2Dmode: false
             - 
@@ -289,46 +267,7 @@ items:
                 dynamicFriction: 0.8
                 Restitution: 0.1
                 jointLimitMode: false
-views: 
-  "Items": 
-    selected: [ 6 ]
-    checked: [ 1, 2 ]
-    expanded: [ 1, 2, 3, 5 ]
-  "Scene": 
-    viewpointControlMode: thirdPerson
-    collisionLines: false
-    polygonMode: fill
-    defaultHeadLight: true
-    defaultHeadLightIntensity: 0.75
-    headLightLightingFromBack: false
-    worldLight: true
-    worldLightIntensity: 0.5
-    worldLightAmbient: 0.3
-    additionalLights: true
-    floorGrid: true
-    floorGridSpan: 10
-    floorGridInterval: 0.5
-    texture: true
-    lineWidth: 1
-    pointSize: 1
-    normalVisualization: false
-    normalLength: 0.01
-    coordinateAxes: true
-    showFPS: false
-    useBufferForPicking: true
-    camera: 
-      current: Perspective
-      eye: [ 2.38053012, 1.54674006, 1.10801005 ]
-      direction: [ -0.820639908, -0.553809941, -0.140870988 ]
-      up: [ -0.116768934, -0.0788013488, 0.990027964 ]
-      fieldOfView: 0.6978
-      near: 0.01
-      far: 10000
-      orthoHeight: 20
-    backgroundColor: [ 0.100000001, 0.100000001, 0.300000012 ]
-    gridColor: [ 0.899999976, 0.899999976, 0.899999976, 1 ]
-    gridInterval: 1
 toolbars: 
   "TimeBar": 
-    minTime: 0
-    maxTime: 15
+    min_time: 0
+    max_time: 15

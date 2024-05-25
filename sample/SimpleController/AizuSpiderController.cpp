@@ -17,10 +17,10 @@ class AizuSpiderController : public SimpleController
     Body* body;
     double dt;
 
-    Link::ActuationMode mainActuationMode;
+    int mainActuationMode;
 
     vector<Link*> tracks;
-    Link::ActuationMode trackActuationMode;
+    int trackActuationMode;
     double trackVelocityRatio;
     double kd_mainTrack;
     double kd_subTrack;
@@ -71,17 +71,19 @@ bool AizuSpiderController::initialize(SimpleControllerIO* io)
     body = io->body();
     dt = io->timeStep();
 
+    mainActuationMode = Link::JointEffort;
+    for(auto opt : io->options()){
+        if(opt == "velocity"){
+            mainActuationMode = Link::JointVelocity;
+        } else if(opt == "position"){
+            mainActuationMode = Link::JointDisplacement;
+        }
+    }
     io->os() << "The actuation mode of " << io->controllerName() << " is ";
-    string option = io->optionString();
-    if(option == "velocity"){
-        mainActuationMode = Link::ActuationMode::JOINT_VELOCITY;
-        io->os() << "JOINT_VELOCITY";
-    } else if(option  == "position"){
-        mainActuationMode = Link::ActuationMode::JOINT_DISPLACEMENT;
-        io->os() << "JOINT_DISPLACEMENT";
-    } else {
-        mainActuationMode = Link::ActuationMode::JOINT_EFFORT;
-        io->os() << "JOINT_EFFORT";
+    switch(mainActuationMode){
+    case Link::JointEffort:       io->os() << "JointEffort";       break;
+    case Link::JointDisplacement: io->os() << "JointDisplacement"; break;
+    case Link::JointVelocity:     io->os() << "JointVelocity";     break;
     }
     io->os() << "." << endl;
 
@@ -115,18 +117,19 @@ bool AizuSpiderController::initializeTracks(SimpleControllerIO* io)
     bool result;
     
     if(body->link(wheelNames[0])){
-        if(mainActuationMode == Link::JOINT_TORQUE){
-            trackActuationMode = Link::JOINT_TORQUE;
+        if(mainActuationMode == Link::JointTorque){
+            trackActuationMode = Link::JointTorque;
             trackVelocityRatio = 0.5;
             kd_mainTrack = 8.0;
             kd_subTrack = 1.5;
         } else {
-            trackActuationMode = Link::JOINT_VELOCITY;
+            trackActuationMode = Link::JointVelocity;
             trackVelocityRatio = 4.0;
         }
         result = initializeTracks(io, wheelNames);
     } else {
-        trackActuationMode = Link::JOINT_SURFACE_VELOCITY;
+        // Pseudo continuous tracks
+        trackActuationMode = Link::JointVelocity;
         trackVelocityRatio = 0.5;
         result = initializeTracks(io, trackNames);
     }
@@ -186,9 +189,9 @@ bool AizuSpiderController::initializeJoints(SimpleControllerIO* io, vector<Joint
         info.joint = joint;
         info.qref = info.qold = joint->q();
 
-        if(mainActuationMode == Link::JOINT_VELOCITY){
+        if(mainActuationMode == Link::JointVelocity){
             info.kp = spec.kp_velocity;
-        } else if(mainActuationMode == Link::JOINT_TORQUE){
+        } else if(mainActuationMode == Link::JointTorque){
             info.kp = spec.kp_torque;
             info.kd = spec.kd_torque;
         }
@@ -209,13 +212,13 @@ bool AizuSpiderController::control()
     updateFlipperTargetPositions();
 
     switch(mainActuationMode){
-    case Link::JOINT_TORQUE:
+    case Link::JointTorque:
         controlJointsWithTorque();
         break;
-    case Link::JOINT_VELOCITY:
+    case Link::JointVelocity:
         controlJointsWithVelocity();
         break;
-    case Link::JOINT_ANGLE:
+    case Link::JointAngle:
         controlJointsWithPosition();
         break;
     default:
@@ -241,15 +244,14 @@ void AizuSpiderController::controlTracks()
 
     switch(trackActuationMode){
 
-    case Link::JOINT_VELOCITY:
-    case Link::JOINT_SURFACE_VELOCITY:
+    case Link::JointVelocity:
         for(int i=0; i < 3; ++i){
             tracks[i*2  ]->dq_target() = dq_L;
             tracks[i*2+1]->dq_target() = dq_R;
         }
         break;
 
-    case Link::JOINT_TORQUE:
+    case Link::JointTorque:
         setTrackTorque(L_TRACK, dq_L, kd_mainTrack);
         setTrackTorque(R_TRACK, dq_R, kd_mainTrack);
         setTrackTorque(FL_SUB_TRACK, dq_L, kd_subTrack);

@@ -11,78 +11,68 @@ items:
       name: "World"
       plugin: Body
       class: WorldItem
+      isChecked: true
       data: 
         collisionDetection: false
         collisionDetector: AISTCollisionDetector
+        materialTableFile: "${SHARE}/default/materials.yaml"
       children: 
         - 
           id: 2
           name: "PA10"
           plugin: Body
           class: BodyItem
+          isChecked: true
           data: 
-            modelFile: "${SHARE}/model/PA10/PA10.body"
-            currentBaseLink: "BASE"
+            file: "${SHARE}/model/PA10/PA10.body"
+            format: CHOREONOID-BODY
             rootPosition: [ 0, 0, 0 ]
             rootAttitude: [ 
               1, 0, 0, 
               0, 1, 0, 
               0, 0, 1 ]
-            jointPositions: [  0.000000, -0.523599,  0.000000,  1.047198,  0.000000, -0.523599,  0.000000, -0.025000,  0.025000 ]
+            jointDisplacements: [ 0, -30, 0, 60, 0, -30, 0, -1.43239, 1.43239 ]
+            jointPositions: [ 0, -0.523599, 0, 1.0472, 0, -0.523599, 0, -0.0249999, 0.0249999 ]
             initialRootPosition: [ 0, 0, 0 ]
             initialRootAttitude: [ 
               1, 0, 0, 
               0, 1, 0, 
               0, 0, 1 ]
-            initialJointPositions: [  0.000000, -0.523599,  0.000000,  1.047198,  0.000000, -0.523599,  0.000000, -0.025000,  0.025000 ]
-            zmp: [ 0, 0, 0 ]
+            initialJointPositions: [ 0, -0.523599, 0, 1.0472, 0, -0.523599, 0, -0.0249999, 0.0249999 ]
+            staticModel: false
+            collisionDetection: true
             selfCollisionDetection: false
-            isEditable: true
+            location_editable: false
+            scene_sensitive: true
+            zmp: [ 0, 0, 0 ]
           children: 
             - 
               id: 3
               name: "SimpleController"
-              plugin: SimpleController
+              plugin: Body
               class: SimpleControllerItem
               data: 
                 isNoDelayMode: false
+                controllerOptions: ""
                 controller: "PA10PickupController"
+                baseDirectory: "Controller directory"
                 reloading: true
-                inputLinkPositions: false
+                exportSymbols: false
+                isOldTargetVariableMode: false
         - 
           id: 4
-          name: "box3"
-          plugin: Body
-          class: BodyItem
-          data: 
-            modelFile: "${SHARE}/model/misc/box3.body"
-            currentBaseLink: "WAIST"
-            rootPosition: [ 0.9, 0, 0.035 ]
-            rootAttitude: [ 
-              0, -1, 0, 
-              1, 0, 0, 
-              0, 0, 1 ]
-            jointPositions: [  ]
-            initialRootPosition: [ 0.9, 0, 0.035 ]
-            initialRootAttitude: [ 
-              2.22044605e-016, -1, 0, 
-              1, 2.22044605e-016, 0, 
-              0, 0, 1 ]
-            zmp: [ 0, 0, 0 ]
-            selfCollisionDetection: false
-            isEditable: true
-        - 
-          id: 5
           name: "box2"
           plugin: Body
           class: BodyItem
+          isChecked: true
           data: 
-            modelFile: "${SHARE}/model/misc/box2.body"
+            file: "${SHARE}/model/misc/box2.body"
+            format: CHOREONOID-BODY
             currentBaseLink: "WAIST"
-            rootPosition: [ -0, 0.7, 0.1499 ]
+            rootPosition: [ 0, 0.7, 0.1499 ]
             rootAttitude: [ 
-              1, 0, -0, 
-              -0, 1, 0, 
+              1, 0, 0, 
+              0, 1, 0, 
               0, 0, 1 ]
             jointPositions: [  ]
             initialRootPosition: [ -0, 0.7, 0.1499 ]
@@ -90,18 +80,48 @@ items:
               1, 0, -0, 
               -0, 1, 0, 
               0, 0, 1 ]
-            zmp: [ 0, 0, 0 ]
             staticModel: true
+            collisionDetection: true
             selfCollisionDetection: false
-            isEditable: true
+            location_editable: false
+            scene_sensitive: true
+            zmp: [ 0, 0, 0 ]
+        - 
+          id: 5
+          name: "box3"
+          plugin: Body
+          class: BodyItem
+          isChecked: true
+          data: 
+            file: "${SHARE}/model/misc/box3.body"
+            format: CHOREONOID-BODY
+            currentBaseLink: "WAIST"
+            rootPosition: [ 0.9, 0, 0.035 ]
+            rootAttitude: [ 
+              2.22044605e-16, -1, 0, 
+              1, 2.22044605e-16, 0, 
+              0, 0, 1 ]
+            jointPositions: [  ]
+            initialRootPosition: [ 0.9, 0, 0.035 ]
+            initialRootAttitude: [ 
+              2.22044605e-16, -1, 0, 
+              1, 2.22044605e-16, 0, 
+              0, 0, 1 ]
+            staticModel: false
+            collisionDetection: true
+            selfCollisionDetection: false
+            location_editable: true
+            scene_sensitive: true
+            zmp: [ 0, 0, 0 ]
         - 
           id: 6
           name: "Floor"
           plugin: Body
           class: BodyItem
+          isChecked: true
           data: 
-            modelFile: "${SHARE}/model/misc/floor.body"
-            currentBaseLink: "BASE"
+            file: "${SHARE}/model/misc/floor.body"
+            format: CHOREONOID-BODY
             rootPosition: [ 0, 0, -0.1 ]
             rootAttitude: [ 
               1, 0, 0, 
@@ -113,37 +133,35 @@ items:
               1, 0, 0, 
               0, 1, 0, 
               0, 0, 1 ]
-            zmp: [ 0, 0, 0 ]
+            staticModel: true
+            collisionDetection: true
             selfCollisionDetection: false
-            isEditable: true
+            location_editable: false
+            scene_sensitive: false
+            zmp: [ 0, 0, 0 ]
         - 
           id: 7
           name: "AISTSimulator"
           plugin: Body
           class: AISTSimulatorItem
+          isSelected: true
           data: 
             timeStep: 0.001
             realtimeSync: true
             recording: "full"
-            timeRangeMode: "Time bar range"
-            onlyActiveControlPeriod: true
+            timeRangeMode: "Active control period"
             timeLength: 60
             allLinkPositionOutputMode: false
             deviceStateOutput: true
             controllerThreads: true
             recordCollisionData: false
-            dynamicsMode: Forward dynamics
-            integrationMode: Runge Kutta
+            controllerOptions: ""
+            dynamicsMode: "Forward dynamics"
+            integrationMode: semi-implicit_euler
             gravity: [ 0, 0, -9.80665 ]
-            staticFriction: 0.5
-            slipFriction: 0.5
-            cullingThresh: 0.02
-            errorCriterion: 0.001
-            maxNumIterations: 1000
-            contactCorrectionDepth: 0.0001
-            contactCorrectionVelocityRatio: 30
             kinematicWalking: false
             2Dmode: false
+            oldAccelSensorMode: false
         - 
           id: 8
           name: "ODESimulator"
@@ -214,45 +232,41 @@ items:
             dynamicFriction: 0.5
             Restitution: 0.1
             jointLimitMode: false
+        -
+          id: 11
+          name: "KinematicSimulator"
+          plugin: Body
+          class: KinematicSimulatorItem
+          data:
+            timeStep: 0.001
+            realtimeSync: true
+            recording: "full"
+            timeRangeMode: "Unlimited"
+            timeLength: 180
+            active_control_time_range_mode: true
+            allLinkPositionOutputMode: true
+            deviceStateOutput: true
+            controllerThreads: true
+            recordCollisionData: false
+            controllerOptions: "kinematics"
+            scene_view_edit_mode_blocking: false
+
 views: 
-  "Items": 
-    selected: [ 7 ]
-    checked: [ 1, 2, 4, 5, 6 ]
-    expanded: [ 1, 2, 3, 4, 5 ]
-  "Scene": 
-    viewpointControlMode: thirdPerson
-    collisionLines: false
-    polygonMode: fill
-    defaultHeadLight: true
-    defaultHeadLightIntensity: 0.75
-    headLightLightingFromBack: false
-    worldLight: true
-    worldLightIntensity: 0.5
-    worldLightAmbient: 0.3
-    additionalLights: true
-    floorGrid: false
-    floorGridSpan: 10
-    floorGridInterval: 0.5
-    texture: true
-    lineWidth: 1
-    pointSize: 1
-    normalVisualization: false
-    normalLength: 0.01
-    coordinateAxes: true
-    showFPS: false
-    useBufferForPicking: true
-    camera: 
-      current: Perspective
-      eye: [ 2.83337998, 1.46162999, 0.874503016 ]
-      direction: [ -0.90182054, -0.41758123, -0.111111067 ]
-      up: [ -0.100826629, -0.0466868281, 0.993808031 ]
-      fieldOfView: 0.6978
-      near: 0.01
-      far: 10000
-      orthoHeight: 20
-    backgroundColor: [ 0.100000001, 0.100000001, 0.300000012 ]
-    gridColor: [ 0.899999976, 0.899999976, 0.899999976, 1 ]
+  - 
+    id: 0
+    plugin: Base
+    class: SceneView
+    mounted: true
+    state: 
+      floorGrid: false
+      cameras: 
+        - 
+          camera: [ System, Perspective ]
+          isCurrent: true
+          eye: [ 2.88321, 1.53671, 1.09575 ]
+          direction: [ -0.872341, -0.458202, -0.170504 ]
+          up: [ -0.150948, -0.0792863, 0.985357 ]
 toolbars: 
   "TimeBar": 
-    minTime: 0
-    maxTime: 8
+    min_time: 0
+    max_time: 10

@@ -1,7 +1,5 @@
 /**
    Sample walking and grasp motion controller for the SR1Hand robot model.
-   This program was ported from the "SampleController" sample of OpenHRP3.
-   @author Shizuko Hattori
 */
    
 #include <cnoid/SimpleController>
@@ -40,7 +38,7 @@ class SR1WalkGraspController : public cnoid::SimpleController
     int rarm_wrist_r;
     ForceSensor* rhsensor;
     Interpolator<VectorXd> interpolator;
-    MultiValueSeqPtr qseq;
+    std::shared_ptr<MultiValueSeq> qseq;
     VectorXd qref, qold, qref_old;
     int currentFrame;
     double timeStep;
@@ -55,15 +53,15 @@ public:
         ostream& os = io->os();
 
         if(!qseq){
-            string filename = getNativePathString(
-                boost::filesystem::path(shareDirectory())
-                / "motion" / "SR1" / "SR1WalkPattern3.seq");
+            auto path = shareDirPath() / "motion" / "SR1" / "SR1WalkPattern3.seq";
+            string filename = path.make_preferred().string();
 
             BodyMotion motion;
-            if(!motion.loadStandardYAMLformat(filename)){
+            if(!motion.load(filename)){
                 os << motion.seqMessage() << endl;
                 return false;
             }
+            motion.updateJointPosSeqWithBodyPositionSeq();
             qseq = motion.jointPosSeq();
             if(qseq->numFrames() == 0){
                 os << "Empty motion data." << endl;
@@ -92,7 +90,7 @@ public:
             auto joint = body->joint(i);
             qold[i] = q0[i] = joint->q();
             q1[i] = frame[i];
-            joint->setActuationMode(Link::JOINT_TORQUE);
+            joint->setActuationMode(JointTorque);
             io->enableIO(joint);
         }
 

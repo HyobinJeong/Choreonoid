@@ -29,7 +29,7 @@ public:
             os << " The steering_right link is not found." << endl;
             return false;
         }
-        steering->setActuationMode(Link::JOINT_TORQUE);
+        steering->setActuationMode(Link::JointTorque);
         io->enableIO(steering);
 
         drive = body->link("REAR_WHEEL");
@@ -37,11 +37,11 @@ public:
             os << "The rear_wheel link is not found." << endl;
             return false;
         }
-        drive->setActuationMode(Link::JOINT_TORQUE);
-        io->enableInput(drive, JOINT_VELOCITY);
+        drive->setActuationMode(Link::JointTorque);
+        io->enableInput(drive, JointVelocity);
         io->enableOutput(drive);
         
-        if(!joystick.isReady()){
+        if(!joystick.makeReady()){
             os << "Joystick is not ready: " << joystick.errorMessage() << endl;
         }
 
@@ -55,10 +55,10 @@ public:
     {
         joystick.readCurrentState();
         
-        static const double DRIVE_GAIN = 10.0;
+        static const double DRIVE_GAIN = 1.0;
         static const double STEERING_P_GAIN = 3.0;
         static const double STEERING_D_GAIN = 1.0;
-        static const double VEL_MAX = 20;
+        static const double VEL_MAX = 10;
 
         double pos[2];
         pos[0] = joystick.getPosition(2);

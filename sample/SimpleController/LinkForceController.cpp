@@ -24,8 +24,9 @@ public:
                 return false;
             }
         }
-        
-        io->enableOutput(link, LINK_FORCE);
+
+        link->setActuationMode(LinkExtWrench);
+        io->enableIO(link);
 
         if(!joystick.isReady()){
             os << "Joystick is not ready: " << joystick.errorMessage() << endl;
@@ -44,7 +45,7 @@ public:
         f  = link->R() * Vector3::UnitX() * (-joystick.getPosition(Joystick::L_STICK_V_AXIS) * k);
         f += link->R() * Vector3::UnitY() * (-joystick.getPosition(Joystick::L_STICK_H_AXIS) * k);
         f += link->R() * Vector3::UnitZ() * (-joystick.getPosition(Joystick::R_STICK_V_AXIS) * k);
-        link->addExternalForce(f, Vector3(0.0, 0.0, 0.0));
+        link->addExternalForceAtLocalPosition(f, Vector3(0.0, 0.0, 0.0));
 
         return true;
     }
