@@ -147,99 +147,104 @@ class RBQController : public cnoid::SimpleController
 
 public:
     const static int NUM_INIT_STEP = 1000;
-    virtual bool initialize(SimpleControllerIO* io) {
-
-        // Core Shared Memory Creation [SharedData]===================================
-        shm_opened = false;
-        int shmFD;
-        shmFD = shm_open(SIM_DATA, O_RDWR, 0666);
-        if(shmFD == -1){
-            io->os() << "Fail to open core shared memory [simData]";
-        }else{
-            if(ftruncate(shmFD, sizeof(SIM_VARIABLE)) == -1){
-                io->os() << "Fail to truncate core shared memory [simData]";
+    virtual bool initialize(SimpleControllerIO* io) override {
+        try {
+            // Core Shared Memory Creation [SharedData]===================================
+            shm_opened = false;
+            int shmFD;
+            shmFD = shm_open(SIM_DATA, O_RDWR, 0666);
+            if(shmFD == -1){
+                io->os() << "Fail to open core shared memory [simData]";
             }else{
-                simData = (pSIM_VARIABLE)mmap(0, sizeof(SIM_VARIABLE), PROT_WRITE, MAP_SHARED, shmFD, 0);
-                if(simData == (void*)-1){
-                    io->os() << "Fail to mapping core shared memory [simData]";
+                if(ftruncate(shmFD, sizeof(SIM_VARIABLE)) == -1){
+                    io->os() << "Fail to truncate core shared memory [simData]";
+                }else{
+                    simData = (pSIM_VARIABLE)mmap(0, sizeof(SIM_VARIABLE), PROT_WRITE, MAP_SHARED, shmFD, 0);
+                    if(simData == (void*)-1){
+                        io->os() << "Fail to mapping core shared memory [simData]";
+                    }
                 }
             }
+            io->os() << "Core shared memory creation = OK [simData]";
+            // =========================================================================
+
+
+            pio = io;
+            io->os() << "init start" << endl;
+            dt = io->timeStep();
+            io->os() << "time step: " <<dt<<endl;
+            body = io->body();
+            qref.resize(body->numJoints());
+            q.resize(body->numJoints());
+            qold.resize(body->numJoints());
+            dq.resize(body->numJoints());
+            q0.resize(body->numJoints());
+            q0ref.resize(body->numJoints());
+
+            io->os()<<"Device num: "<<body->numDevices()<<endl;
+            //Device list?
+            pGyro = body->findDevice<RateGyroSensor>("WaistGyro");
+            pAcc = body->findDevice<AccelerationSensor>("WaistAccelSensor");
+
+    //        DeviceList<ForceSensor> forceSensors(body->devices());
+    //        forceSensors<< body->devices();
+
+    //        pHRFT = forceSensor[0];
+
+            pHRFT = body->findDevice<ForceSensor>("HRFT");
+            pHLFT = body->findDevice<ForceSensor>("HLFT");
+            pFRFT = body->findDevice<ForceSensor>("FRFT");
+            pFLFT = body->findDevice<ForceSensor>("FLFT");
+
+            io->enableInput(pGyro);
+            io->enableInput(pAcc);
+            io->enableInput(pHRFT);
+            io->enableInput(pHLFT);
+            io->enableInput(pFRFT);
+            io->enableInput(pFLFT);
+            io->enableInput(body->rootLink(), LINK_POSITION);
+
+            io->enableInput(body->link("HIND_R_FT"), LINK_POSITION);
+            io->enableInput(body->link("HIND_L_FT"), LINK_POSITION);
+            io->enableInput(body->link("FRONT_R_FT"), LINK_POSITION);
+            io->enableInput(body->link("FRONT_L_FT"), LINK_POSITION);
+
+
+            for(int i=0; i < body->numJoints(); ++i){
+
+                Link* joint = body->joint(i);
+                joint->setActuationMode(Link::JointTorque);
+                io->enableIO(joint);
+                qref[i] = joint->q();
+
+                q0[i] = body->joint(i)->q();
+                Pos_ref[i] = 0;
+                Pos_ref_old[i] = 0;
+                Tau_ref[i] = 0;
+            }
+
+            io->os() << "init done" << endl;
+
+            Quat_IMU[0] = 1;
+            Quat_IMU[1] = 0;
+            Quat_IMU[2] = 0;
+            Quat_IMU[3] = 0;
+
+            cnt = 0;
+
+            initcnt = NUM_INIT_STEP;
+
+            // 마커 초기화
+    //        initializeMarker(io);
+            initializeSphereMarker(io);
+
+
+            return true;
+        } catch (const std::exception& e) {
+            io->os() << "Exception in initialize: " << e.what() << std::endl;
+            return false;
         }
-        io->os() << "Core shared memory creation = OK [simData]";
-        // =========================================================================
 
-
-        pio = io;
-        io->os() << "init start" << endl;
-        dt = io->timeStep();
-        io->os() << "time step: " <<dt<<endl;
-        body = io->body();
-        qref.resize(body->numJoints());
-        q.resize(body->numJoints());
-        qold.resize(body->numJoints());
-        dq.resize(body->numJoints());
-        q0.resize(body->numJoints());
-        q0ref.resize(body->numJoints());
-
-        io->os()<<"Device num: "<<body->numDevices()<<endl;
-        //Device list?
-        pGyro = body->findDevice<RateGyroSensor>("WaistGyro");
-        pAcc = body->findDevice<AccelerationSensor>("WaistAccelSensor");
-
-//        DeviceList<ForceSensor> forceSensors(body->devices());
-//        forceSensors<< body->devices();
-
-//        pHRFT = forceSensor[0];
-
-        pHRFT = body->findDevice<ForceSensor>("HRFT");
-        pHLFT = body->findDevice<ForceSensor>("HLFT");
-        pFRFT = body->findDevice<ForceSensor>("FRFT");
-        pFLFT = body->findDevice<ForceSensor>("FLFT");
-
-        io->enableInput(pGyro);
-        io->enableInput(pAcc);
-        io->enableInput(pHRFT);
-        io->enableInput(pHLFT);
-        io->enableInput(pFRFT);
-        io->enableInput(pFLFT);
-        io->enableInput(body->rootLink(), LINK_POSITION);
-
-        io->enableInput(body->link("HIND_R_FT"), LINK_POSITION);
-        io->enableInput(body->link("HIND_L_FT"), LINK_POSITION);
-        io->enableInput(body->link("FRONT_R_FT"), LINK_POSITION);
-        io->enableInput(body->link("FRONT_L_FT"), LINK_POSITION);
-
-
-        for(int i=0; i < body->numJoints(); ++i){
-
-            Link* joint = body->joint(i);
-            joint->setActuationMode(Link::JOINT_TORQUE);
-            io->enableIO(joint);
-            qref[i] = joint->q();
-
-            q0[i] = body->joint(i)->q();
-            Pos_ref[i] = 0;
-            Pos_ref_old[i] = 0;
-            Tau_ref[i] = 0;
-        }
-
-        io->os() << "init done" << endl;
-
-        Quat_IMU[0] = 1;
-        Quat_IMU[1] = 0;
-        Quat_IMU[2] = 0;
-        Quat_IMU[3] = 0;
-
-        cnt = 0;
-
-        initcnt = NUM_INIT_STEP;
-
-        // 마커 초기화
-//        initializeMarker(io);
-        initializeSphereMarker(io);
-
-
-        return true;
     }
 
 //    void initializeMarker(SimpleControllerIO* io) {
@@ -408,224 +413,227 @@ public:
         }
     }
 
-    virtual bool control() {
+    virtual bool control() override {
+        try {
+            Vector3 Gyro = pGyro->w();
+            Vector3 Acc = pAcc->dv();
 
-        Vector3 Gyro = pGyro->w();
-        Vector3 Acc = pAcc->dv();
+    //        Vector6 rfwrench = pRFFT->F();
+    //        Vector6 lfwrench = pLFFT->F();
 
-//        Vector6 rfwrench = pRFFT->F();
-//        Vector6 lfwrench = pLFFT->F();
-        
-        Position T = body->rootLink()->position();
-        Vector3 P = T.translation();
-        Matrix3 R = T.rotation();
-        Quaterniond Qt(R);
+            Isometry3 T = body->rootLink()->position();
+            Vector3 P = T.translation();
+            Matrix3 R = T.rotation();
+            Quaterniond Qt(R);
 
-        Eigen::Matrix3d rotationMatrix = R;
-        Eigen::Vector3d euler = rotationMatrix.eulerAngles(2, 1, 0);
+            Eigen::Matrix3d rotationMatrix = R;
+            Eigen::Vector3d euler = rotationMatrix.eulerAngles(2, 1, 0);
 
-//        io->os() << P << endl;
-        //pio->os() << Qt.w() <<" "<<Qt.x() <<" "<<Qt.y() <<" "<<Qt.z() <<" "<<endl;
-
-
-        //test_give force to robot
-        //Link* WLptr= body->link("WAIST");
-        //io->os()<<WLptr->index()<< " f_ext "<<WLptr->f_ext()  <<endl;
-        //WLptr->f_ext() =Vector3(200,0,0);
-        //not working......why???????
-
-        //setExternalForce(body,WLptr,Vector3(0,0,0),Vector3(200,0,0),0.1);
-        //how to apply????
-
-        for(int i=0; i<3 ; i++){
-            simData->choreonoid_acc[i] = Acc[i];
-            simData->choreonoid_gyro[i] = Gyro[i];
-            simData->choreonoid_W_body_pos[i] = P[i];
-        }
-
- 
-       simData->choreonoid_quat[0] = Qt.w();
-       simData->choreonoid_quat[1] = Qt.x();
-       simData->choreonoid_quat[2] = Qt.y();
-       simData->choreonoid_quat[3] = Qt.z();
+    //        io->os() << P << endl;
+            //pio->os() << Qt.w() <<" "<<Qt.x() <<" "<<Qt.y() <<" "<<Qt.z() <<" "<<endl;
 
 
+            //test_give force to robot
+            //Link* WLptr= body->link("WAIST");
+            //io->os()<<WLptr->index()<< " f_ext "<<WLptr->f_ext()  <<endl;
+            //WLptr->f_ext() =Vector3(200,0,0);
+            //not working......why???????
 
-        //pio->os() <<Gyro[0] <<" "<<Gyro[1] <<" "<<Gyro[2] <<" "<<endl;
-        //pio->os() <<Acc[0] <<" "<<Acc[1] <<" "<<Acc[2] <<" "<<endl;
+            //setExternalForce(body,WLptr,Vector3(0,0,0),Vector3(200,0,0),0.1);
+            //how to apply????
 
-        ///----- Go to Initial Position during INIT steptime--------
-        if(initcnt==NUM_INIT_STEP)
-        {
-            getPosRef();
-            for(int i=0; i < body->numJoints(); ++i){
-                Link* joint = body->joint(i);
-                q0ref[i] = Pos_ref[i];
-                q0[i] = joint->q();
-
-                //pio->os()<<"posRef["<<i<<"]: "<<Pos_ref[i]<<endl;
+            for(int i=0; i<3 ; i++){
+                simData->choreonoid_acc[i] = Acc[i];
+                simData->choreonoid_gyro[i] = Gyro[i];
+                simData->choreonoid_W_body_pos[i] = P[i];
             }
 
 
+           simData->choreonoid_quat[0] = Qt.w();
+           simData->choreonoid_quat[1] = Qt.x();
+           simData->choreonoid_quat[2] = Qt.y();
+           simData->choreonoid_quat[3] = Qt.z();
 
-        }
-        initcnt--;
-        if(initcnt>0)
-        {
-            double alpha = (NUM_INIT_STEP*1.0-initcnt*1.0)/(NUM_INIT_STEP*1.0);
 
+
+            //pio->os() <<Gyro[0] <<" "<<Gyro[1] <<" "<<Gyro[2] <<" "<<endl;
+            //pio->os() <<Acc[0] <<" "<<Acc[1] <<" "<<Acc[2] <<" "<<endl;
+
+            ///----- Go to Initial Position during INIT steptime--------
+            if(initcnt==NUM_INIT_STEP)
+            {
+                getPosRef();
+                for(int i=0; i < body->numJoints(); ++i){
+                    Link* joint = body->joint(i);
+                    q0ref[i] = Pos_ref[i];
+                    q0[i] = joint->q();
+
+                    //pio->os()<<"posRef["<<i<<"]: "<<Pos_ref[i]<<endl;
+                }
+
+
+
+            }
+            initcnt--;
+            if(initcnt>0)
+            {
+                double alpha = (NUM_INIT_STEP*1.0-initcnt*1.0)/(NUM_INIT_STEP*1.0);
+
+                for(int i=0; i < body->numJoints(); ++i){
+                    Link* joint = body->joint(i);
+                    qref[i] = q0[i]+(alpha)*(q0ref[i]-q0[i]);
+                    q[i] = joint->q();
+
+                    double dq_ref = 0;
+                    dq[i] = (q[i] - qold[i]) / dt;
+                    joint->u() = (qref[i] - q[i]) * pgain[i] + (dq_ref - dq[i]) * dgain[i];
+
+                    qold[i] = q[i];
+                    Pos_ref_old[i] = Pos_ref[i];
+                }
+
+                //io->os() << "alpha: "<<alpha<<endl;
+                return true;
+            }
+            ///------------------------------------------------------------
+
+
+            ///------Joint Position Control ---------------------------------
+            getPosRef();
+            getGains();
             for(int i=0; i < body->numJoints(); ++i){
-                Link* joint = body->joint(i);
-                qref[i] = q0[i]+(alpha)*(q0ref[i]-q0[i]);
-                q[i] = joint->q();
 
-                double dq_ref = 0;
+                Link* joint = body->joint(i);
+                qref[i] = Pos_ref[i];
+                q[i] = joint->q();
                 dq[i] = (q[i] - qold[i]) / dt;
-                joint->u() = (qref[i] - q[i]) * pgain[i] + (dq_ref - dq[i]) * dgain[i];
+
+                double dq_ref = (qref[i] - Pos_ref_old[i]) / dt;
+    //            double JointToque = (qref[i] - q[i]) * pGain[i] + (dq_ref - dq[i]) * dGain[i];
+                double JointToque = (qref[i] - q[i]) * pGain[i] + (- dq[i]) * dGain[i];
+
+                jointInput[i] = JointToque;
+
 
                 qold[i] = q[i];
                 Pos_ref_old[i] = Pos_ref[i];
+
+
+
             }
 
-            //io->os() << "alpha: "<<alpha<<endl;
+            ///------ Torque FeedForward --------------------------------------
+            getTorqueRef();
+
+
+            for(int i=0; i < body->numJoints(); ++i){
+                jointInput[i] += Tau_ref[i];
+            }
+
+
+            ///------ Total Joint input------------------------------------------------
+            for(int i=0; i<body->numJoints(); i++){
+                Link* joint = body->joint(i);
+
+                double jointTorque;
+
+                if(q[i] >= lowerJLim[i]*D2R && q[i] <= upperJLim[i]*D2R){
+                    jointTorque = LimitFunction(jointInput[i], TauLim[i], -TauLim[i]);
+                }
+                else if(q[i] < lowerJLim[i]*D2R){
+                    jointTorque = (- dq[i])*30.0 + ((lowerJLim[i]*D2R + 0.0*D2R) - q[i])*1500;
+                }
+                else if(q[i] > upperJLim[i]*D2R){
+                    jointTorque = (- dq[i])*30.0 + ((upperJLim[i]*D2R - 0.0*D2R) - q[i])*1500;
+                }
+                joint->u() = jointTorque;
+            }
+
+
+            setPosNow();
+            setVelNow();
+
+            ///-------------Force Sensor Calc ------------------------------------
+            Isometry3 T_HRFT = body->link("HIND_R_FT")->position();
+            Matrix3 R_HRFT = T_HRFT.rotation();
+            Isometry3 T_HLFT = body->link("HIND_L_FT")->position();
+            Matrix3 R_HLFT = T_HLFT.rotation();
+            Isometry3 T_FRFT = body->link("FRONT_R_FT")->position();
+            Matrix3 R_FRFT = T_FRFT.rotation();
+            Isometry3 T_FLFT = body->link("FRONT_L_FT")->position();
+            Matrix3 R_FLFT = T_FLFT.rotation();
+
+            Vector6 FT_HRFT = pHRFT->F();
+            Vector3 F_HRFT;
+            Vector6 FT_HLFT = pHLFT->F();
+            Vector3 F_HLFT;
+            Vector6 FT_FRFT = pFRFT->F();
+            Vector3 F_FRFT;
+            Vector6 FT_FLFT = pFLFT->F();
+            Vector3 F_FLFT;
+
+            for(int i=0 ; i<3; i++){
+                F_HRFT[i] = FT_HRFT[i];
+                F_HLFT[i] = FT_HLFT[i];
+                F_FRFT[i] = FT_FRFT[i];
+                F_FLFT[i] = FT_FLFT[i];
+            }
+
+            Vector3 HRFT_global = R_HRFT*F_HRFT;
+            Vector3 HLFT_global = R_HLFT*F_HLFT;
+            Vector3 FRFT_global = R_FRFT*F_FRFT;
+            Vector3 FLFT_global = R_FLFT*F_FLFT;
+
+            for(int i=0 ; i<3; i++){
+                simData->chorednoid_ReactionF_HR[i] = HRFT_global[i];
+                simData->chorednoid_ReactionF_HL[i] = HLFT_global[i];
+                simData->chorednoid_ReactionF_FR[i] = FRFT_global[i];
+                simData->chorednoid_ReactionF_FL[i] = FLFT_global[i];
+
+            }
+
+
+            //pio->os()<< HRFT_global.x()<<", "<<HRFT_global.y()<<", "<<HRFT_global.z()<<endl;
+            //pio->os()<< R_HRFT<<endl;
+
+            if(cnt%2==0 && !(simData == (void*)-1)) // 500Hz
+            {
+                simData->TimeSyncFlag = 1;
+                //pio->os()<<"1 tic"<<endl;
+            }
+            cnt++;
+
+            // 마커 위치 업데이트
+
+            Vector3 newPosition_zmpRef(simData->pos_zmpRef[0], simData->pos_zmpRef[1], simData->pos_zmpRef[2]); // 원하는 위치로 설정
+//            updatezmpRefPosition(R*newPosition_zmpRef + P);
+
+            Vector3 newPosition_comRef(simData->pos_comRef[0], simData->pos_comRef[1], simData->pos_comRef[2]);
+//            updatecomRefPosition(R*newPosition_comRef + P);
+
+            if(simData->CommandRef_swingState[0] > 0.2 && simData->CommandRef_swingState[0] < 0.6 && simData->CommandRef_contact[0] == 0){
+                Vector3 newPosition_foot(simData->pos_pfoot0[0], simData->pos_pfoot0[1], simData->pos_pfoot0[2]);
+//                updatefootPosition0(R*newPosition_foot + P);
+            }
+            if(simData->CommandRef_swingState[1] > 0.2 && simData->CommandRef_swingState[1] < 0.6 && simData->CommandRef_contact[1] == 0){
+                Vector3 newPosition_foot(simData->pos_pfoot1[0], simData->pos_pfoot1[1], simData->pos_pfoot1[2]);
+//                updatefootPosition1(R*newPosition_foot + P);
+            }
+            if(simData->CommandRef_swingState[2] > 0.2 && simData->CommandRef_swingState[2] < 0.6 && simData->CommandRef_contact[2] == 0){
+                Vector3 newPosition_foot(simData->pos_pfoot2[0], simData->pos_pfoot2[1], simData->pos_pfoot2[2]);
+//                updatefootPosition2(R*newPosition_foot + P);
+            }
+            if(simData->CommandRef_swingState[3] > 0.2 && simData->CommandRef_swingState[3] < 0.6 && simData->CommandRef_contact[3] == 0){
+                Vector3 newPosition_foot(simData->pos_pfoot3[0], simData->pos_pfoot3[1], simData->pos_pfoot3[2]);
+//                updatefootPosition￣3(R*newPosition_foot + P);
+            }
+
             return true;
-        }
-        ///------------------------------------------------------------
-
-
-        ///------Joint Position Control ---------------------------------
-        getPosRef();
-        getGains();
-        for(int i=0; i < body->numJoints(); ++i){
-
-            Link* joint = body->joint(i);
-            qref[i] = Pos_ref[i];
-            q[i] = joint->q();
-            dq[i] = (q[i] - qold[i]) / dt;
-
-            double dq_ref = (qref[i] - Pos_ref_old[i]) / dt;
-//            double JointToque = (qref[i] - q[i]) * pGain[i] + (dq_ref - dq[i]) * dGain[i];
-            double JointToque = (qref[i] - q[i]) * pGain[i] + (- dq[i]) * dGain[i];
-
-            jointInput[i] = JointToque;
-
-
-            qold[i] = q[i];
-            Pos_ref_old[i] = Pos_ref[i];
-
-
-
+        } catch (const std::exception& e) {
+            std::cerr << "Exception in control: " << e.what() << std::endl;
+            return false;
         }
 
-        ///------ Torque FeedForward --------------------------------------
-        getTorqueRef();
-
-
-        for(int i=0; i < body->numJoints(); ++i){
-            jointInput[i] += Tau_ref[i];
-        }
-
-
-        ///------ Total Joint input------------------------------------------------
-        for(int i=0; i<body->numJoints(); i++){
-            Link* joint = body->joint(i);
-
-            double jointTorque;
-
-            if(q[i] >= lowerJLim[i]*D2R && q[i] <= upperJLim[i]*D2R){
-                jointTorque = LimitFunction(jointInput[i], TauLim[i], -TauLim[i]);
-            }
-            else if(q[i] < lowerJLim[i]*D2R){
-                jointTorque = (- dq[i])*30.0 + ((lowerJLim[i]*D2R + 0.0*D2R) - q[i])*1500;
-            }
-            else if(q[i] > upperJLim[i]*D2R){
-                jointTorque = (- dq[i])*30.0 + ((upperJLim[i]*D2R - 0.0*D2R) - q[i])*1500;
-            }
-            joint->u() = jointTorque;
-        }
-
-
-        setPosNow();
-        setVelNow();
-
-        ///-------------Force Sensor Calc ------------------------------------
-        Position T_HRFT = body->link("HIND_R_FT")->position();
-        Matrix3 R_HRFT = T_HRFT.rotation();
-        Position T_HLFT = body->link("HIND_L_FT")->position();
-        Matrix3 R_HLFT = T_HLFT.rotation();
-        Position T_FRFT = body->link("FRONT_R_FT")->position();
-        Matrix3 R_FRFT = T_FRFT.rotation();
-        Position T_FLFT = body->link("FRONT_L_FT")->position();
-        Matrix3 R_FLFT = T_FLFT.rotation();
-
-        Vector6 FT_HRFT = pHRFT->F();
-        Vector3 F_HRFT;
-        Vector6 FT_HLFT = pHLFT->F();
-        Vector3 F_HLFT;
-        Vector6 FT_FRFT = pFRFT->F();
-        Vector3 F_FRFT;
-        Vector6 FT_FLFT = pFLFT->F();
-        Vector3 F_FLFT;
-
-        for(int i=0 ; i<3; i++){
-            F_HRFT[i] = FT_HRFT[i];
-            F_HLFT[i] = FT_HLFT[i];
-            F_FRFT[i] = FT_FRFT[i];
-            F_FLFT[i] = FT_FLFT[i];
-        }
-
-        Vector3 HRFT_global = R_HRFT*F_HRFT;
-        Vector3 HLFT_global = R_HLFT*F_HLFT;
-        Vector3 FRFT_global = R_FRFT*F_FRFT;
-        Vector3 FLFT_global = R_FLFT*F_FLFT;
-
-        for(int i=0 ; i<3; i++){
-            simData->chorednoid_ReactionF_HR[i] = HRFT_global[i];
-            simData->chorednoid_ReactionF_HL[i] = HLFT_global[i];
-            simData->chorednoid_ReactionF_FR[i] = FRFT_global[i];
-            simData->chorednoid_ReactionF_FL[i] = FLFT_global[i];
-
-        }
-
-
-        //pio->os()<< HRFT_global.x()<<", "<<HRFT_global.y()<<", "<<HRFT_global.z()<<endl;
-        //pio->os()<< R_HRFT<<endl;
-
-        if(cnt%2==0 && !(simData == (void*)-1)) // 500Hz
-        {
-            simData->TimeSyncFlag = 1;
-            //pio->os()<<"1 tic"<<endl;
-        }
-        cnt++;
-
-        // 마커 위치 업데이트
-//        Vector3f markerPosition = Vector3f(0,0,0.5); // 업데이트하고자 하는 위치
-//        updateMarkerPosition(markerPosition);
-
-        Vector3 newPosition_zmpRef(simData->pos_zmpRef[0], simData->pos_zmpRef[1], simData->pos_zmpRef[2]); // 원하는 위치로 설정
-        updatezmpRefPosition(R*newPosition_zmpRef + P);
-
-        Vector3 newPosition_comRef(simData->pos_comRef[0], simData->pos_comRef[1], simData->pos_comRef[2]);
-        updatecomRefPosition(R*newPosition_comRef + P);
-
-        if(simData->CommandRef_swingState[0] > 0.2 && simData->CommandRef_swingState[0] < 0.6 && simData->CommandRef_contact[0] == 0){
-            Vector3 newPosition_foot(simData->pos_pfoot0[0], simData->pos_pfoot0[1], simData->pos_pfoot0[2]);
-            updatefootPosition0(R*newPosition_foot + P);
-        }
-        if(simData->CommandRef_swingState[1] > 0.2 && simData->CommandRef_swingState[1] < 0.6 && simData->CommandRef_contact[1] == 0){
-            Vector3 newPosition_foot(simData->pos_pfoot1[0], simData->pos_pfoot1[1], simData->pos_pfoot1[2]);
-            updatefootPosition1(R*newPosition_foot + P);
-        }
-        if(simData->CommandRef_swingState[2] > 0.2 && simData->CommandRef_swingState[2] < 0.6 && simData->CommandRef_contact[2] == 0){
-            Vector3 newPosition_foot(simData->pos_pfoot2[0], simData->pos_pfoot2[1], simData->pos_pfoot2[2]);
-            updatefootPosition2(R*newPosition_foot + P);
-        }
-        if(simData->CommandRef_swingState[3] > 0.2 && simData->CommandRef_swingState[3] < 0.6 && simData->CommandRef_contact[3] == 0){
-            Vector3 newPosition_foot(simData->pos_pfoot3[0], simData->pos_pfoot3[1], simData->pos_pfoot3[2]);
-            updatefootPosition3(R*newPosition_foot + P);
-        }
-
-        return true;
     }
 
 };
