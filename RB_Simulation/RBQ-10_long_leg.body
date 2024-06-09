@@ -11,7 +11,7 @@ links:
     jointType: free
     translation: [ 0, 0, 0.3135 ]
     centerOfMass: [ -0.05, 0.0, 0.0 ]
-    mass: 15.0
+    mass: 20.0
     inertia: [
       0.0649, -0.000875, 0.000538,
       -0.000875, 0.170, -0.000063,
@@ -92,7 +92,7 @@ links:
                 diffuseColor: [ 0.578, 0.0, 0.824 ]
       - 
         type: Transform
-        translation: [-0.0, -0.0, -0.14]
+        translation: [-0.0, -0.0, -0.16]
         elements:
           Shape:
             geometry: { type: Box, size: [ 0.06, 0.025, 0.330 ] }
@@ -107,7 +107,7 @@ links:
     jointId: 2
     rotorInertia: 0.000169145
     gearRatio: 14
-    jointRange: [ -2.61799, 0 ]
+    jointRange: [ -160, 0 ]
     translation: [ 0, 0, -0.33 ]
     centerOfMass: [ 0.005249,0.00129,-0.094565 ]
     mass: 0.2
@@ -127,7 +127,7 @@ links:
                 diffuseColor: [ 0.6, 0.6, 0.6 ]
       - 
         type: Transform
-        translation: [-0.0, -0.0, -0.14]
+        translation: [-0.0, -0.0, -0.16]
         elements:
           Shape:
             geometry: { type: Box, size: [ 0.04, 0.02, 0.330 ] }
@@ -138,7 +138,7 @@ links:
     jointType: fixed
     translation: [ 0, 0, -0.33 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
-    mass: 0.001
+    mass: 0.1
     material: Sole
     inertia: [
       0.01, 0, 0,
@@ -158,10 +158,6 @@ links:
         type: ForceSensor
         name: HRFT
         id: 0
-      -
-        type: ContactSurface
-        friction: 0.002
-        viscosity: 0.01
 
 
   -
@@ -221,7 +217,7 @@ links:
     jointId: 5
     rotorInertia: 0.000169145
     gearRatio: 14
-    jointRange: [ -2.61799, 0 ]
+    jointRange: [ -160, 0 ]
     translation: [ 0, 0, -0.33]
     centerOfMass: [ 0.005249,-0.00129,-0.094565 ]
     mass: 0.2
@@ -236,7 +232,7 @@ links:
     jointType: fixed
     translation: [ 0, 0, -0.33 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
-    mass: 0.001
+    mass: 0.1
     material: Sole
     inertia: [
       0.01, 0, 0,
@@ -256,10 +252,6 @@ links:
         type: ForceSensor
         name: HLFT
         id: 1
-      -
-        type: ContactSurface
-        friction: 0.002
-        viscosity: 0.01
 
   -
     name: FRONT_R_HIP_ROLL
@@ -318,7 +310,7 @@ links:
     jointId: 8
     rotorInertia: 0.000169145
     gearRatio: 14
-    jointRange: [ -2.61799, 0 ]
+    jointRange: [ -160, 0 ]
     translation: [ 0, 0, -0.33 ]
     centerOfMass: [ 0.005249,0.00129,-0.094565 ]
     mass: 0.2
@@ -333,7 +325,7 @@ links:
     jointType: fixed
     translation: [ 0, 0, -0.33 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
-    mass: 0.001
+    mass: 0.1
     material: Sole
     inertia: [
       0.01, 0, 0,
@@ -353,10 +345,6 @@ links:
         type: ForceSensor
         name: FRFT
         id: 2
-      -
-        type: ContactSurface
-        friction: 0.002
-        viscosity: 0.01
 
   -
     name: FRONT_L_HIP_ROLL
@@ -415,7 +403,7 @@ links:
     jointId: 11
     rotorInertia: 0.000169145
     gearRatio: 14
-    jointRange: [ -2.61799, -0.0 ]
+    jointRange: [ -160, -0.0 ]
     translation: [ 0, 0, -0.33 ]
     centerOfMass: [ 0.005249,-0.00129,-0.094565 ]
     mass: 0.2
@@ -430,7 +418,7 @@ links:
     jointType: fixed
     translation: [ 0, 0, -0.33 ]
     centerOfMass: [ 0.0,0.0,0.0 ]
-    mass: 0.001
+    mass: 0.1
     material: Sole
     inertia: [
       0.01, 0, 0,
@@ -450,10 +438,6 @@ links:
         type: ForceSensor
         name: FLFT
         id: 3
-      -
-        type: ContactSurface
-        friction: 0.002
-        viscosity: 0.01
         
 standardPose: [ 
    0, 30, -60,

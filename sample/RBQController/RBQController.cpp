@@ -72,10 +72,10 @@ static double initPos[] = {
 };
 
 static double lowerJLim[] = {
-   -42.0, -360.0, -162.0,
-   -31.0, -360.0, -162.0,
-   -42.0, -360.0, -162.0,
-   -31.0, -360.0, -162.0,
+   -42.0, -360.0, -165.0,
+   -31.0, -360.0, -165.0,
+   -42.0, -360.0, -165.0,
+   -31.0, -360.0, -165.0,
 };
 
 static double upperJLim[] = {
@@ -86,10 +86,10 @@ static double upperJLim[] = {
 };
 
 static double TauLim[] = {
-   60.0, 60.0, 80.0,
-   60.0, 60.0, 80.0,
-   60.0, 60.0, 80.0,
-   60.0, 60.0, 80.0,
+   100.0, 100.0, 140.0,
+   100.0, 100.0, 140.0,
+   100.0, 100.0, 140.0,
+   100.0, 100.0, 140.0,
 };
 
 
@@ -340,32 +340,30 @@ public:
     void updatezmpRefPosition(const Vector3& position) {
         // 변환 행렬을 설정하여 위치 업데이트
         zmpRef->setTranslation(position);
-        zmpRef->notifyUpdate();
     }
     void updatecomRefPosition(const Vector3& position) {
         // 변환 행렬을 설정하여 위치 업데이트
         comRef->setTranslation(position);
-        comRef->notifyUpdate();
     }
     void updatefootPosition0(const Vector3& position) {
         // 변환 행렬을 설정하여 위치 업데이트
         pfoot_final[0]->setTranslation(position);
-        pfoot_final[0]->notifyUpdate();
+//        pfoot_final[0]->notifyUpdate();
     }
     void updatefootPosition1(const Vector3& position) {
         // 변환 행렬을 설정하여 위치 업데이트
         pfoot_final[1]->setTranslation(position);
-        pfoot_final[1]->notifyUpdate();
+//        pfoot_final[1]->notifyUpdate();
     }
     void updatefootPosition2(const Vector3& position) {
         // 변환 행렬을 설정하여 위치 업데이트
         pfoot_final[2]->setTranslation(position);
-        pfoot_final[2]->notifyUpdate();
+//        pfoot_final[2]->notifyUpdate();
     }
     void updatefootPosition3(const Vector3& position) {
         // 변환 행렬을 설정하여 위치 업데이트
         pfoot_final[3]->setTranslation(position);
-        pfoot_final[3]->notifyUpdate();
+//        pfoot_final[3]->notifyUpdate();
     }
 
     double LimitFunction(double _input, double _upperlim, double _lowerlim){
@@ -541,10 +539,10 @@ public:
                     jointTorque = LimitFunction(jointInput[i], TauLim[i], -TauLim[i]);
                 }
                 else if(q[i] < lowerJLim[i]*D2R){
-                    jointTorque = (- dq[i])*30.0 + ((lowerJLim[i]*D2R + 0.0*D2R) - q[i])*1500;
+                    jointTorque = (- dq[i])*20.0 + ((lowerJLim[i]*D2R + 0.0*D2R) - q[i])*1500;
                 }
                 else if(q[i] > upperJLim[i]*D2R){
-                    jointTorque = (- dq[i])*30.0 + ((upperJLim[i]*D2R - 0.0*D2R) - q[i])*1500;
+                    jointTorque = (- dq[i])*20.0 + ((upperJLim[i]*D2R - 0.0*D2R) - q[i])*1500;
                 }
                 joint->u() = jointTorque;
             }
@@ -606,26 +604,26 @@ public:
             // 마커 위치 업데이트
 
             Vector3 newPosition_zmpRef(simData->pos_zmpRef[0], simData->pos_zmpRef[1], simData->pos_zmpRef[2]); // 원하는 위치로 설정
-//            updatezmpRefPosition(R*newPosition_zmpRef + P);
+            updatezmpRefPosition(R*newPosition_zmpRef + P);
 
             Vector3 newPosition_comRef(simData->pos_comRef[0], simData->pos_comRef[1], simData->pos_comRef[2]);
-//            updatecomRefPosition(R*newPosition_comRef + P);
+            updatecomRefPosition(R*newPosition_comRef + P);
 
             if(simData->CommandRef_swingState[0] > 0.2 && simData->CommandRef_swingState[0] < 0.6 && simData->CommandRef_contact[0] == 0){
                 Vector3 newPosition_foot(simData->pos_pfoot0[0], simData->pos_pfoot0[1], simData->pos_pfoot0[2]);
-//                updatefootPosition0(R*newPosition_foot + P);
+                updatefootPosition0(R*newPosition_foot + P);
             }
             if(simData->CommandRef_swingState[1] > 0.2 && simData->CommandRef_swingState[1] < 0.6 && simData->CommandRef_contact[1] == 0){
                 Vector3 newPosition_foot(simData->pos_pfoot1[0], simData->pos_pfoot1[1], simData->pos_pfoot1[2]);
-//                updatefootPosition1(R*newPosition_foot + P);
+                updatefootPosition1(R*newPosition_foot + P);
             }
             if(simData->CommandRef_swingState[2] > 0.2 && simData->CommandRef_swingState[2] < 0.6 && simData->CommandRef_contact[2] == 0){
                 Vector3 newPosition_foot(simData->pos_pfoot2[0], simData->pos_pfoot2[1], simData->pos_pfoot2[2]);
-//                updatefootPosition2(R*newPosition_foot + P);
+                updatefootPosition2(R*newPosition_foot + P);
             }
             if(simData->CommandRef_swingState[3] > 0.2 && simData->CommandRef_swingState[3] < 0.6 && simData->CommandRef_contact[3] == 0){
                 Vector3 newPosition_foot(simData->pos_pfoot3[0], simData->pos_pfoot3[1], simData->pos_pfoot3[2]);
-//                updatefootPosition￣3(R*newPosition_foot + P);
+                updatefootPosition3(R*newPosition_foot + P);
             }
 
             return true;
